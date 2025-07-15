@@ -73,14 +73,4 @@ class Nurse(Base):
     doctor_id = Column(Integer, ForeignKey("doctor.doctor_id"), nullable=False)
 
     doctor = relationship("Doctor", back_populates="nurses")
-class booking(Base):
-    __tablename__ = "booking"
 
-    booking_id = Column(Integer, primary_key=True, index=True)
-    navatar_id = Column(Integer, ForeignKey("navatar.navatar_id"), nullable=False)
-    doctor_id = Column(Integer, ForeignKey("doctor.doctor_id"), nullable=False)
-    patient_name = Column(String, nullable=False)
-    appointment_time = Column(DateTime, nullable=False)
-
-    navatar = relationship("Navatar", backref="bookings")
-    doctor = relationship("Doctor", backref="bookings")
