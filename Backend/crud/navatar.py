@@ -2,6 +2,7 @@ from sqlalchemy.orm import Session
 from models import navatar as NavatarModel
 from schemas.navatar import NavatarCreate
 from fastapi import HTTPException
+from typing import Optional
 
 # Create navatar
 def create_navatar(db: Session, navatar: NavatarCreate):
@@ -41,3 +42,16 @@ def delete_navatar(navatar_id: int, db: Session):
     db.delete(db_navatar)
     db.commit()
     return {"detail": "Navatar deleted"}
+def get_navatars_by_hospital(db: Session, hospital_id: Optional[int]):
+    query = db.query(NavatarModel)
+    if hospital_id:
+        query = query.filter(NavatarModel.hospital_id == hospital_id)
+    return query.all()
+
+def search_navatars(db: Session, hospital_id: Optional[int] = None, search: Optional[str] = None):
+    query = db.query(NavatarModel)
+    if hospital_id:
+        query = query.filter(NavatarModel.hospital_id == hospital_id)
+    if search:
+        query = query.filter(NavatarModel.name.ilike(f"%{search}%"))
+    return query.all()
