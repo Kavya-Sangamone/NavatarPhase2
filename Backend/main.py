@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from database import Base, engine
-from router import hospital, navatar, doctor, nurse
+from router import hospital, navatar, doctor, nurse, admin
 
 # Create database tables
 Base.metadata.create_all(bind=engine)
@@ -17,3 +17,4 @@ app.include_router(hospital.router)
 app.include_router(navatar.router)
 app.include_router(doctor.router)
 app.include_router(nurse.router)
+app.include_router(admin.router)

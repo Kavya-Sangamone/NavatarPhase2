@@ -8,9 +8,9 @@ class Hospital(Base):
     __tablename__ = "hospital"
 
     hospital_id = Column(Integer, primary_key=True, index=True)
-    hospital_name = Column(String, index=True, nullable=False)
-    country = Column(String, index=True, nullable=False)
-    pincode = Column(String, index=True, nullable=False)
+    hospital_name= Column(String, unique=True, index=True,nullable=False)
+    country= Column(String, index=True,nullable=False)
+    pincode = Column(String, index=True,nullable=False)
     created_at = Column(DateTime, nullable=False, default=func.now())
     updated_at = Column(DateTime, nullable=False,
                         default=func.now(), onupdate=func.now())

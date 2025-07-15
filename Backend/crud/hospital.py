@@ -2,6 +2,7 @@ from sqlalchemy.orm import Session
 from models import Hospital
 from schemas import hospital as hospital_schema
 from fastapi import HTTPException
+from typing import Optional
 
 
 def create_hospital(db: Session, hospital: hospital_schema.HospitalCreate):
@@ -36,3 +37,9 @@ def delete_hospital(hospital_id: int, db: Session):
     db.delete(db_hospital)
     db.commit()
     return {"detail": "Hospital deleted successfully"}
+
+def search_hospitals(db: Session, search_query: Optional[str] = None):
+    query = db.query(hospital_model.Hospital)
+    if search_query:
+        query = query.filter(hospital_model.Hospital.name.ilike(f"%{search_query}%"))
+    return query.all()

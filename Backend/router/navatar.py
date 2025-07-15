@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 from database import get_db
 from schemas import navatar as schema
 from crud import navatar as crud
+from typing import Optional
 
 router = APIRouter(prefix="/superadmin/navatars", tags=["Navatars"])
 
@@ -30,3 +31,18 @@ def update_navatar(navatar_id: int, navatar: schema.NavatarCreate, db: Session =
 @router.delete("/{navatar_id}")
 def delete_navatar(navatar_id: int, db: Session = Depends(get_db)):
     return crud.delete_navatar(navatar_id, db)
+
+@router.get("/{hospital_id}/navatars", response_model=list[schema.NavatarOut])
+def get_navatars_by_hospital(
+    hospital_id: Optional[int] = None,
+    db: Session = Depends(get_db)
+):
+    return crud.get_navatars_by_hospital(db, hospital_id=hospital_id)
+
+@router.get("/search", response_model=list[schema.NavatarOut])
+def search_navatars(
+    hospital_id: Optional[int] = None,
+    search_query: Optional[str] = None,
+    db: Session = Depends(get_db)
+):
+    return crud.search_navatars(db, hospital_id=hospital_id, search=search_query)
