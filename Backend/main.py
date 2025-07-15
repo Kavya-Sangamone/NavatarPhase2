@@ -1,8 +1,6 @@
-# main.py
 from fastapi import FastAPI
 from database import Base, engine
-from router import hospital,navatar
- # Import the hospital router
+from router import hospital, navatar, doctor, nurse
 
 # Create database tables
 Base.metadata.create_all(bind=engine)
@@ -17,3 +15,5 @@ app = FastAPI(
 # Register routers
 app.include_router(hospital.router)
 app.include_router(navatar.router)
+app.include_router(doctor.router)
+app.include_router(nurse.router)
