@@ -31,7 +31,8 @@ def update_hospital(hospital_id: int, hospital: hospital_schema.HospitalCreate, 
 def delete_hospital(hospital_id: int, db: Session = Depends(get_db)):
     return hospital_crud.delete_hospital(hospital_id, db)
 
-@router.get("/search", response_model=list[hospital_schema.hospitalOut])
+
+@router.get("/search", response_model=list[hospital_schema.HospitalOut])
 def search_hospitals(
     search_query: Optional[str] = Query(None),
     db: Session = Depends(get_db)

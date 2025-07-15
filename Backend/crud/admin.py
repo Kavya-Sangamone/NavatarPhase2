@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from models import admin as AdminModel
+from models import Admin as AdminModel
 from schemas.admin import AdminCreate
 from fastapi import HTTPException
 from typing import Optional
