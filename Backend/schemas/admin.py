@@ -7,8 +7,18 @@ class AdminBase(BaseModel):
     hospital_id: int
     email: EmailStr
 
+
 class AdminCreate(AdminBase):
+    password: str
+
+
+class AdminUpdate(BaseModel):
+    username: Optional[str] = None
+    email: Optional[EmailStr] = None
+    is_active: Optional[bool] = None
+    password: Optional[str] = None
     pass
+
 
 class AdminOut(AdminBase):
     admin_id: int
@@ -16,4 +26,5 @@ class AdminOut(AdminBase):
     updated_at: datetime
 
     class Config:
+        orm_mode = True
         from_attributes = True  # Pydantic v2

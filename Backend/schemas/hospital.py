@@ -2,18 +2,21 @@ from pydantic import BaseModel
 from typing import Optional
 from datetime import datetime
 
-class hospitalBase(BaseModel):
+
+class HospitalBase(BaseModel):
     hospital_name: str
     country: str
     pincode: str
 
-class hospitalCreate(hospitalBase):
+
+class HospitalCreate(HospitalBase):
     pass
 
-class hospitalOut(hospitalBase):
+
+class HospitalOut(HospitalBase):
     hospital_id: int
     created_at: datetime
     updated_at: datetime
 
     class Config:
-        from_attributes = True  # for Pydantic v2
+        from_attributes = True

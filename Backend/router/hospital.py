@@ -1,4 +1,3 @@
-# routers/hospital.py
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 from database import get_db
@@ -8,20 +7,24 @@ from typing import Optional
 
 router = APIRouter(prefix="/superadmin/hospital", tags=["Hospitals"])
 
+
 # Create a hospital
-@router.post("/", response_model=hospital_schema.hospitalOut)
-def create_hospital(hospital: hospital_schema.hospitalCreate, db: Session = Depends(get_db)):
+@router.post("/", response_model=hospital_schema.HospitalOut)
+def create_hospital(hospital: hospital_schema.HospitalCreate, db: Session = Depends(get_db)):
     return hospital_crud.create_hospital(db, hospital)
 
+
 # Get all hospitals
-@router.get("/", response_model=list[hospital_schema.hospitalOut])
+@router.get("/", response_model=list[hospital_schema.HospitalOut])
 def get_all_hospitals(db: Session = Depends(get_db)):
     return hospital_crud.get_all_hospitals(db)
 
+
 # Update a specific hospital by ID
-@router.put("/{hospital_id}", response_model=hospital_schema.hospitalOut)
-def update_hospital(hospital_id: int, hospital: hospital_schema.hospitalCreate, db: Session = Depends(get_db)):
+@router.put("/{hospital_id}", response_model=hospital_schema.HospitalOut)
+def update_hospital(hospital_id: int, hospital: hospital_schema.HospitalCreate, db: Session = Depends(get_db)):
     return hospital_crud.update_hospital(hospital_id, hospital, db)
+
 
 # Delete a specific hospital by ID
 @router.delete("/{hospital_id}")
