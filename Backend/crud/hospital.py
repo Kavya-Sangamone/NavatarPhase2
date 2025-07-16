@@ -1,16 +1,25 @@
 from sqlalchemy.orm import Session
+from sqlalchemy.exc import IntegrityError
 from models import Hospital
 from schemas import hospital as hospital_schema
 from fastapi import HTTPException
 from typing import Optional
 
 
+
 def create_hospital(db: Session, hospital: hospital_schema.HospitalCreate):
     db_hospital = Hospital(**hospital.dict())
     db.add(db_hospital)
-    db.commit()
-    db.refresh(db_hospital)
-    return db_hospital
+    try:
+        db.commit()
+        db.refresh(db_hospital)
+        return db_hospital
+    except IntegrityError:
+        db.rollback()
+        raise HTTPException(
+            status_code=400,
+            detail="Hospital with this name and pincode already exists."
+        )
 
 
 def get_all_hospitals(db: Session):
@@ -39,7 +48,7 @@ def delete_hospital(hospital_id: int, db: Session):
     return {"detail": "Hospital deleted successfully"}
 
 def search_hospitals(db: Session, search_query: Optional[str] = None):
-    query = db.query(hospital_model.Hospital)
+    query = db.query(Hospital)
     if search_query:
-        query = query.filter(hospital_model.Hospital.name.ilike(f"%{search_query}%"))
+        query = query.filter(Hospital.name.ilike(f"%{search_query}%"))
     return query.all()

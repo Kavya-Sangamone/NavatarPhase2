@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, Enum, func
+from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, Enum, func, UniqueConstraint
 from sqlalchemy.orm import relationship
 from database import Base
 import enum
@@ -14,7 +14,9 @@ class Hospital(Base):
     created_at = Column(DateTime, nullable=False, default=func.now())
     updated_at = Column(DateTime, nullable=False,
                         default=func.now(), onupdate=func.now())
-
+    __table_args__ = (
+        UniqueConstraint("hospital_name", "pincode", name="unique_hospital_name_pincode"),
+    )
 
 class NavatarStatus(str, enum.Enum):
     Available = "Available"

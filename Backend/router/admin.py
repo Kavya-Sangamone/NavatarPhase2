@@ -42,3 +42,5 @@ def search_admins(
     db: Session = Depends(get_db)
 ):
     return crud.search_admins(db, hospital_id=hospital_id, search=search_query)
+
+

@@ -1,51 +1,30 @@
-from fastapi import APIRouter, Depends, HTTPException
+# routers/doctor.py
+from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
-from models import Doctor, Hospital
-from schemas.doctor import *
 from database import get_db
+from schemas.doctor import DoctorCreate, DoctorUpdate, DoctorOut
+from typing import List
+from crud import doctors as doctor_crud
 
 router = APIRouter()
 
-
-@router.post("/hospitals/{hospital_id}/doctors", response_model=DoctorOut)
+router = APIRouter(prefix="/admin", tags=["Navatars"])
+@router.post("/{hospital_id}/doctors", response_model=DoctorOut)
 def create_doctor(hospital_id: int, doctor: DoctorCreate, db: Session = Depends(get_db)):
-    db_doctor = Doctor(**doctor.dict(), hospital_id=hospital_id)
-    db.add(db_doctor)
-    db.commit()
-    db.refresh(db_doctor)
-    return db_doctor
+    return doctor_crud.create_doctor(db, hospital_id, doctor)
 
-
-@router.get("/hospitals/{hospital_id}/doctors", response_model=List[DoctorOut])
+@router.get("/{hospital_id}/doctors", response_model=List[DoctorOut])
 def list_doctors(hospital_id: int, db: Session = Depends(get_db)):
-    return db.query(Doctor).filter(Doctor.hospital_id == hospital_id).all()
-
+    return doctor_crud.list_doctors_by_hospital(db, hospital_id)
 
 @router.get("/doctors/{doctor_id}", response_model=DoctorOut)
 def get_doctor(doctor_id: int, db: Session = Depends(get_db)):
-    doctor = db.query(Doctor).get(doctor_id)
-    if not doctor:
-        raise HTTPException(status_code=404, detail="Doctor not found")
-    return doctor
-
+    return doctor_crud.get_doctor(db, doctor_id)
 
 @router.put("/doctors/{doctor_id}", response_model=DoctorOut)
 def update_doctor(doctor_id: int, updates: DoctorUpdate, db: Session = Depends(get_db)):
-    doctor = db.query(Doctor).get(doctor_id)
-    if not doctor:
-        raise HTTPException(status_code=404, detail="Doctor not found")
-    for field, value in updates.dict(exclude_unset=True).items():
-        setattr(doctor, field, value)
-    db.commit()
-    db.refresh(doctor)
-    return doctor
-
+    return doctor_crud.update_doctor(db, doctor_id, updates)
 
 @router.delete("/doctors/{doctor_id}")
 def delete_doctor(doctor_id: int, db: Session = Depends(get_db)):
-    doctor = db.query(Doctor).get(doctor_id)
-    if not doctor:
-        raise HTTPException(status_code=404, detail="Doctor not found")
-    db.delete(doctor)
-    db.commit()
-    return {"message": "Doctor deleted"}
+    return doctor_crud.delete_doctor(db, doctor_id)
