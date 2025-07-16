@@ -8,6 +8,8 @@ app = FastAPI(
 )
 # Create database tables
 Base.metadata.create_all(bind=engine)
+
+
 @app.get("/")
 def root():
     return {"message": "Welcome to the Hospital Management API"}

@@ -1,22 +1,35 @@
-from pydantic import BaseModel
-from typing import List, Optional
+from pydantic import BaseModel, EmailStr, Field
+from typing import Optional
+from datetime import datetime
+from models import NurseDepartment, Gender
 
 
 class NurseBase(BaseModel):
-    nurse_name: str
+    name: str = Field(..., min_length=1)
+    gender: Gender
+    department: NurseDepartment
+    email: EmailStr
+    phone: Optional[str] = Field(None, min_length=10, max_length=15)
 
 
 class NurseCreate(NurseBase):
-    pass
+    assigned_doctor_id: int
 
 
 class NurseUpdate(BaseModel):
-    nurse_name: Optional[str]
+    name: Optional[str]
+    gender: Optional[Gender]
+    department: Optional[NurseDepartment]
+    email: Optional[EmailStr]
+    phone: Optional[str]
+    assigned_doctor_id: Optional[int]
 
 
 class NurseOut(NurseBase):
-    nurse_id: int
-    doctor_id: int
+    id: int
+    assigned_doctor_id: int
+    created_at: datetime
+    updated_at: datetime
 
     class Config:
         from_attributes = True
