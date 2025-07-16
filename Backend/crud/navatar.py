@@ -44,16 +44,20 @@ def delete_navatar(navatar_id: int, db: Session):
     db.delete(db_navatar)
     db.commit()
     return {"detail": "Navatar deleted"}
-def get_navatars_by_hospital(db: Session, hospital_id: Optional[int]):
-    query = db.query(NavatarModel)
-    if hospital_id:
-        query = query.filter(NavatarModel.hospital_id == hospital_id)
-    return query.all()
+
 
 def search_navatars(db: Session, hospital_id: Optional[int] = None, search: Optional[str] = None):
-    query = db.query(NavatarModel)
+    query = db.query(Navatar)
     if hospital_id:
-        query = query.filter(NavatarModel.hospital_id == hospital_id)
+        query = query.filter(Navatar.hospital_id == hospital_id)
     if search:
-        query = query.filter(NavatarModel.name.ilike(f"%{search}%"))
+        query = query.filter(Navatar.navatar_name.ilike(f"%{search}%"))
+
+    return query.all()
+
+
+def get_navatars_by_hospital(db: Session, hospital_id: Optional[int]):
+    query = db.query(Navatar)
+    if hospital_id:
+        query = query.filter(Navatar.hospital_id == hospital_id)
     return query.all()
