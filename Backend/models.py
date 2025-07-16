@@ -4,6 +4,29 @@ from database import Base
 import enum
 
 
+# Enums for gender
+class Gender(str, enum.Enum):
+    Male = "Male"
+    Female = "Female"
+    Other = "Other"
+
+
+# Enum for doctor departments
+class DoctorDepartment(str, enum.Enum):
+    Cardiology = "Cardiology"
+    Surgery = "Surgery"
+    Pediatrics = "Pediatrics"
+    Neurology = "Neurology"
+
+
+# Enum for nurse departments
+class NurseDepartment(str, enum.Enum):
+    ICU = "ICU"
+    Pediatrics = "Pediatrics"
+    Emergency = "Emergency"
+    Ward = "Ward"
+
+
 class Hospital(Base):
     __tablename__ = "hospital"
 
@@ -15,8 +38,10 @@ class Hospital(Base):
     updated_at = Column(DateTime, nullable=False,
                         default=func.now(), onupdate=func.now())
     __table_args__ = (
-        UniqueConstraint("hospital_name", "pincode", name="unique_hospital_name_pincode"),
+        UniqueConstraint("hospital_name", "pincode",
+                         name="unique_hospital_name_pincode"),
     )
+
 
 class NavatarStatus(str, enum.Enum):
     Available = "Available"
@@ -57,11 +82,17 @@ class Admin(Base):
 class Doctor(Base):
     __tablename__ = "doctor"
 
-    doctor_id = Column(Integer, primary_key=True, index=True)
-    doctor_name = Column(String, nullable=False)
-    specialization = Column(String, nullable=False)
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    name = Column(String, nullable=False)
+    gender = Column(Enum(Gender), nullable=False)
+    department = Column(Enum(DoctorDepartment), nullable=False)
+    email = Column(String, unique=True, nullable=False)
+    phone = Column(String, nullable=True)
     hospital_id = Column(Integer, ForeignKey(
         "hospital.hospital_id"), nullable=False)
+    created_at = Column(DateTime, nullable=False, default=func.now())
+    updated_at = Column(DateTime, nullable=False,
+                        default=func.now(), onupdate=func.now())
 
     hospital = relationship("Hospital", backref="doctors")
     nurses = relationship("Nurse", back_populates="doctor")
@@ -70,9 +101,15 @@ class Doctor(Base):
 class Nurse(Base):
     __tablename__ = "nurse"
 
-    nurse_id = Column(Integer, primary_key=True, index=True)
-    nurse_name = Column(String, nullable=False)
-    doctor_id = Column(Integer, ForeignKey("doctor.doctor_id"), nullable=False)
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    name = Column(String, nullable=False)
+    gender = Column(Enum(Gender), nullable=False)
+    department = Column(Enum(NurseDepartment), nullable=False)
+    email = Column(String, unique=True, nullable=False)
+    phone = Column(String, nullable=True)
+    assigned_doctor_id = Column(Integer, ForeignKey("doctor.id"))
+    created_at = Column(DateTime, nullable=False, default=func.now())
+    updated_at = Column(DateTime, nullable=False,
+                        default=func.now(), onupdate=func.now())
 
     doctor = relationship("Doctor", back_populates="nurses")
-

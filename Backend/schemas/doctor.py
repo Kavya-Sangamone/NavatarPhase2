@@ -1,12 +1,15 @@
-# schemas/doctor.py
-
-from pydantic import BaseModel
-from typing import List, Optional
+from pydantic import BaseModel, EmailStr, Field
+from typing import Optional
+from datetime import datetime
+from models import DoctorDepartment, Gender
 
 
 class DoctorBase(BaseModel):
-    doctor_name: str
-    specialization: str
+    name: str = Field(..., min_length=1)
+    gender: Gender
+    department: DoctorDepartment
+    email: EmailStr
+    phone: Optional[str] = Field(None, min_length=10, max_length=15)
 
 
 class DoctorCreate(DoctorBase):
@@ -14,13 +17,17 @@ class DoctorCreate(DoctorBase):
 
 
 class DoctorUpdate(BaseModel):
-    doctor_name: Optional[str]
-    specialization: Optional[str]
+    name: Optional[str]
+    gender: Optional[Gender]
+    department: Optional[DoctorDepartment]
+    email: Optional[EmailStr]
+    phone: Optional[str]
 
 
 class DoctorOut(DoctorBase):
-    doctor_id: int
-    hospital_id: int
+    id: int
+    created_at: datetime
+    updated_at: datetime
 
     class Config:
         from_attributes = True
