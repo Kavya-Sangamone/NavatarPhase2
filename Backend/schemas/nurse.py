@@ -21,7 +21,7 @@ class NurseUpdate(BaseModel):
     gender: Optional[Gender]
     department: Optional[NurseDepartment]
     email: Optional[EmailStr]
-    phone: Optional[str]
+    phone: Optional[str] = Field(None, min_length=10, max_length=15)
     assigned_doctor_id: Optional[int]
 
 

@@ -69,7 +69,7 @@ class Admin(Base):
     __tablename__ = "admin"
 
     admin_id = Column(Integer, primary_key=True, index=True)
-    admin_name = Column(String, unique=True, nullable=False)
+    admin_name = Column(String, nullable=False)
     hospital_id = Column(Integer, ForeignKey(
         "hospital.hospital_id"), nullable=False)
     email = Column(String, unique=True, nullable=False)
