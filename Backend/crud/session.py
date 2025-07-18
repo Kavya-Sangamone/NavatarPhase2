@@ -3,15 +3,26 @@ from models import Session as SessionModel
 import schemas.session as session_schema
 from fastapi import HTTPException
 from models import Booking
+from datetime import datetime, timedelta
 
 
 def create_session(db: Session, session: session_schema.SessionCreate):
     booking = db.query(Booking).filter(
         Booking.booking_id == session.booking_id).first()
+
     if not booking:
         raise HTTPException(status_code=404, detail="Booking not found")
 
-    db_session = SessionModel(**session.dict())
+    start_timestamp = datetime.combine(booking.date, booking.start_time)
+    end_timestamp = datetime.combine(booking.date, booking.end_time)
+
+    db_session = SessionModel(
+        booking_id=session.booking_id,
+        start_timestamp=start_timestamp,
+        end_timestamp=end_timestamp,
+        ended_by=session.ended_by,
+        video_call_status=session.video_call_status
+    )
     db.add(db_session)
     db.commit()
     db.refresh(db_session)
