@@ -13,7 +13,7 @@ class DoctorBase(BaseModel):
 
 
 class DoctorCreate(DoctorBase):
-    pass
+    password: str
 
 
 class DoctorUpdate(BaseModel):
@@ -21,6 +21,7 @@ class DoctorUpdate(BaseModel):
     gender: Optional[Gender]
     department: Optional[DoctorDepartment]
     email: Optional[EmailStr]
+    password: Optional[str] = None
     phone: Optional[str] = Field(
         None, min_length=10, max_length=15)
 
