@@ -8,16 +8,31 @@ from typing import Optional
 def create_admin(db: Session, admin: AdminCreate):
     if not admin.email or not admin.admin_name:
         raise HTTPException(
-            status_code=400, detail="Name and Email are required.")
+            status_code=400, detail="Name and Email are required."
+        )
 
-    existing = db.query(AdminModel).filter(
-        AdminModel.email == admin.email).first()
-    if existing:
+    existing_email = db.query(AdminModel).filter(
+        AdminModel.email == admin.email
+    ).first()
+    if existing_email:
         raise HTTPException(
-            status_code=409, detail="Admin with this email already exists.")
+            status_code=409, detail="Admin with this email already exists."
+        )
 
-    if not db.query(Hospital).filter(Hospital.hospital_id == admin.hospital_id).first():
+    hospital = db.query(Hospital).filter(
+        Hospital.hospital_id == admin.hospital_id
+    ).first()
+    if not hospital:
         raise HTTPException(status_code=404, detail="Hospital not found")
+
+    existing_admin = db.query(AdminModel).filter(
+        AdminModel.hospital_id == admin.hospital_id
+    ).first()
+    if existing_admin:
+        raise HTTPException(
+            status_code=409,
+            detail="An admin already exists for this hospital."
+        )
 
     db_admin = AdminModel(**admin.dict())
     db.add(db_admin)

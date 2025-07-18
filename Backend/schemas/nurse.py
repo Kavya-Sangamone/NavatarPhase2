@@ -14,6 +14,7 @@ class NurseBase(BaseModel):
 
 class NurseCreate(NurseBase):
     assigned_doctor_id: int
+    password: str
 
 
 class NurseUpdate(BaseModel):
@@ -21,6 +22,7 @@ class NurseUpdate(BaseModel):
     gender: Optional[Gender]
     department: Optional[NurseDepartment]
     email: Optional[EmailStr]
+    password: Optional[str] = None
     phone: Optional[str] = Field(None, min_length=10, max_length=15)
     assigned_doctor_id: Optional[int]
 
