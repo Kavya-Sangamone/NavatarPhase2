@@ -4,6 +4,8 @@ from database import get_db
 from crud import hospital as hospital_crud
 from schemas import hospital as hospital_schema
 from typing import Optional
+from schemas.hospital import HospitalWithAdmin
+from crud.hospital import create_hospital_with_admin
 
 router = APIRouter(prefix="/superadmin/hospital", tags=["Hospitals"])
 
@@ -34,3 +36,8 @@ def update_hospital(hospital_id: int, hospital: hospital_schema.HospitalCreate, 
 @router.delete("/{hospital_id}")
 def delete_hospital(hospital_id: int, db: Session = Depends(get_db)):
     return hospital_crud.delete_hospital(hospital_id, db)
+
+
+@router.post("/create_with_admin")
+def create_with_admin(data: HospitalWithAdmin, db: Session = Depends(get_db)):
+    return hospital_crud.create_hospital_with_admin(db, data)

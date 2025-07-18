@@ -38,3 +38,15 @@ class DoctorOut(DoctorBase):
 
     class Config:
         from_attributes = True
+# schemas/hospital_admin.py
+from pydantic import BaseModel, EmailStr
+from typing import Optional
+
+class HospitalAdminCreate(BaseModel):
+    hospital_name: str
+    country: Optional[str]
+    pincode: Optional[str]
+
+    admin_name: str
+    email: EmailStr
+    password: str  # If you want to hash later

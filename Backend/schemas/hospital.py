@@ -20,3 +20,20 @@ class HospitalOut(HospitalBase):
 
     class Config:
         from_attributes = True
+from pydantic import BaseModel, EmailStr
+from typing import Optional
+
+class HospitalCreate(BaseModel):
+    hospital_name: str
+    country: str
+    pincode: str
+
+class AdminCreate(BaseModel):
+    admin_name: str
+    email: EmailStr
+    
+    password: str  # If you want to hash later
+
+class HospitalWithAdmin(BaseModel):
+    hospital: HospitalCreate
+    admin: AdminCreate

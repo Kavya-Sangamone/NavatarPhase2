@@ -4,7 +4,8 @@ from router import hospital, navatar, doctor, nurse, admin
 app = FastAPI(
     title="Hospital Management API",
     description="API for managing hospitals",
-    version="1.0.0"
+    version="1.0.0",
+    redirect_slashes=False
 )
 # Create database tables
 Base.metadata.create_all(bind=engine)

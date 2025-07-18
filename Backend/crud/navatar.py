@@ -26,6 +26,7 @@ def create_navatar(db: Session, navatar: NavatarCreate):
     db.add(db_navatar)
     db.commit()
     db.refresh(db_navatar)
+    print(f"Creating navatar {Navatar.navatar_name} for hospital {Navatar.hospital_id}")
     return db_navatar
 
 
