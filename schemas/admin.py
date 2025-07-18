@@ -9,7 +9,7 @@ class AdminBase(BaseModel):
 
 
 class AdminCreate(AdminBase):
-    password: str
+    pass
 
 
 class AdminUpdate(BaseModel):

@@ -15,7 +15,6 @@ class HospitalCreate(HospitalBase):
 
 class HospitalOut(HospitalBase):
     hospital_id: int
-    hospital_name:str
     created_at: datetime
     updated_at: datetime
 
