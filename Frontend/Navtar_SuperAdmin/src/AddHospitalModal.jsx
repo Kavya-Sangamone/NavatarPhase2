@@ -360,7 +360,7 @@ function AddHospitalModal({ show, onClose, fetchHospitals }) {
 
       for (let name of navatarNames) {
         if (name.trim()) {
-          const res = await fetch(`http://localhost:8000/superadmin/navatars/${hospitalId}`, {
+          const res = await fetch(`http://localhost:8000/superadmin/navatars/${hospitalId}/navatars`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ navatar_name: name, hospital_id: hospitalId }),
@@ -378,7 +378,7 @@ function AddHospitalModal({ show, onClose, fetchHospitals }) {
       }
 
       alert('All Navatars added successfully!');
-      fetchHospitals();
+     
       resetForm();
       onClose();
     } catch (err) {

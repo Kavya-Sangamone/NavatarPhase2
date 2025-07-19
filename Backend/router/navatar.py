@@ -8,7 +8,7 @@ from typing import Optional
 router = APIRouter(prefix="/superadmin/navatars", tags=["Navatars"])
 
 
-@router.post("/", response_model=schema.NavatarOut)
+@router.post("/{hospital_id}/navatars", response_model=schema.NavatarOut)
 def create_navatar(navatar: schema.NavatarCreate, db: Session = Depends(get_db)):
     return crud.create_navatar(db, navatar)
 

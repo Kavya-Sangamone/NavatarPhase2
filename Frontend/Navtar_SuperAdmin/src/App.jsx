@@ -242,8 +242,8 @@ function App() {
             />
           </div>
 
-          {/* Hospital Management */}
-          {/* <div className="bg-white rounded-xl shadow-sm border border-gray-100">
+          /*Hospital Management *
+          /* <div className="bg-white rounded-xl shadow-sm border border-gray-100">
             <div className="p-6 border-b border-gray-200">
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
                 <h2 className="text-xl font-semibold text-gray-900">Hospital Management</h2>
@@ -361,7 +361,7 @@ function App() {
                 <p className="text-gray-500">No hospitals found matching your criteria</p>
               </div>
             )}
-          </div> */}
+          </div>
 
         <HospitalManagement/>
         </div>
