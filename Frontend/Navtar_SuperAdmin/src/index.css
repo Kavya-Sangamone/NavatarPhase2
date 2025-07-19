@@ -1,3 +1,180 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100vh;
+  font-family: sans-serif;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+span {
+  color: #2828cd;
+  font-weight: bold;
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #999;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #fff;
+}
+
+.App {
+  display: flex;
+  width: 100%;
+}
+
+.sidebar {
+  height: 100vh;
+  padding: 0 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  box-shadow: 0 0 5px #000;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.logo img {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+}
+
+.nav-links {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.nav-item {
+  width: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: 10px 20px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  color: #495057;
+}
+
+.nav-item:hover {
+  color: #2828cd;
+  background-color: #dbeafe;
+  cursor: pointer;
+  transform: translateY(-2px);
+}
+
+.user-profile {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.profile-info {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin-bottom: 10px;
+  font-size: 0.8em;
+
+  & p {
+    margin: 0;
+  }
+}
+
+.profile-info img {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+}
+
+.profile-details p {
+  color: #495057;
+}
+
+.user-profile button.logout {
+  width: 80%;
+  background-color: #2828cd;
+  color: white;
+  border: none;
+  padding: 0.6rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+}
+
+.user-profile button.hamburger {
+  display: none;
+  border: none;
+  background: transparent;
+  color: #2828cd;
+}
+
+.pages {
+  flex: 1;
+  width: 100%;
+}
+
+@media screen and (width <= 768px) {
+  .App {
+    display: flex;
+    flex-direction: column;
+  }
+  .sidebar {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 100px;
+    position: relative;
+    justify-content: space-between;
+  }
+
+  .nav-links {
+    position: absolute;
+    display: none;
+    top: 100px;
+    left: 100%;
+    background: #fff;
+    width: 100%;
+    padding: 1rem;
+    transition: all 1s linear;
+  }
+
+  .nav-links.open {
+    display: flex;
+    left: 0;
+  }
+
+  .user-profile {
+    display: flex;
+    flex-direction: row;
+    width: 100px;
+  }
+
+  .user-profile button.hamburger {
+    display: block;
+  }
+
+  .profile-info {
+    display: none;
+  }
+}
