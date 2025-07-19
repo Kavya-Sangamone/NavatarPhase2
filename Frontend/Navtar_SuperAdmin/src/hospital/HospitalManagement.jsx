@@ -1,17 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import { Search, MapPin, Calendar, Bot, Building2, Eye, Edit3, Trash2 } from 'lucide-react';
 import { deleteHospital } from './hospitalApi';
+import UpdateHospitalModal from './UpdateHospitalModal';
 
 function HospitalManagement({ hospitals, fetchHospitals }) {
   const [searchTerm, setSearchTerm] = useState('');
+  const [selectedHospital, setSelectedHospital] = useState(null);
+  const [showEditModal, setShowEditModal] = useState(false);
+
 
   const formatDate = (dateStr) => {
     const date = new Date(dateStr);
     return date.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
   };
 
-  const handleEditHospital = (id) => {
-    alert("Updating hospital:", id);
+  const handleEditHospital = (hospital) => {
+    setSelectedHospital(hospital);
+    setShowEditModal(true);
   };
 
   const handleDeleteHospital = async (id) => {
@@ -77,7 +82,7 @@ function HospitalManagement({ hospitals, fetchHospitals }) {
                 <td>
                   <div className="action-buttons">
                     <button title="Toggle Status"><Eye /></button>
-                    <button onClick={() => handleEditHospital(hospital.hospital_id)} title="Edit"><Edit3 /></button>
+                    <button onClick={() => handleEditHospital(hospital)} title="Edit"><Edit3 /></button>
                     <button onClick={() => handleDeleteHospital(hospital.hospital_id)} title="Delete"><Trash2 /></button>
                   </div>
                 </td>
@@ -93,6 +98,14 @@ function HospitalManagement({ hospitals, fetchHospitals }) {
           </div>
         )}
       </div>
+      {showEditModal && (
+        <UpdateHospitalModal
+          hospitalData={selectedHospital}
+          onClose={() => setShowEditModal(false)}
+          fetchHospitals={fetchHospitals}
+        />
+      )}
+
     </div>
   );
 }

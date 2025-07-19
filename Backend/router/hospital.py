@@ -38,6 +38,6 @@ def delete_hospital(hospital_id: int, db: Session = Depends(get_db)):
     return hospital_crud.delete_hospital(hospital_id, db)
 
 
-@router.post("/create_with_admin")
-def create_with_admin(data: HospitalWithAdmin, db: Session = Depends(get_db)):
-    return hospital_crud.create_hospital_with_admin(db, data)
+# @router.post("/create_with_admin")
+# def create_with_admin(data: HospitalWithAdmin, db: Session = Depends(get_db)):
+#     return hospital_crud.create_hospital_with_admin(db, data)

@@ -25,14 +25,14 @@ def create_admin(db: Session, admin: AdminCreate):
     if not hospital:
         raise HTTPException(status_code=404, detail="Hospital not found")
 
-    existing_admin = db.query(AdminModel).filter(
-        AdminModel.hospital_id == admin.hospital_id
-    ).first()
-    if existing_admin:
-        raise HTTPException(
-            status_code=409,
-            detail="An admin already exists for this hospital."
-        )
+    # existing_admin = db.query(AdminModel).filter(
+    #     AdminModel.hospital_id == admin.hospital_id
+    # ).first()
+    # if existing_admin:
+    #     raise HTTPException(
+    #         status_code=409,
+    #         detail="An admin already exists for this hospital."
+    #     )
 
     db_admin = AdminModel(**admin.dict())
     db.add(db_admin)

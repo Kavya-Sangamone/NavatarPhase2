@@ -1,7 +1,10 @@
-import { Building2, Shield, Activity, Bot } from 'lucide-react';
-
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { Building2, Shield, Activity, Bot, Menu } from 'lucide-react';
 
 const Sidebar = () => {
+    const [sidebarOpen, setSidebarOpen] = useState(false);
+
     return (
         <aside className="sidebar">
             <div className="logo">
@@ -12,35 +15,42 @@ const Sidebar = () => {
                 <span>Super Admin</span>
             </div>
 
-            <nav className="nav-links">
-                <div className="nav-item">
-                    <a href="#">
-                        <Building2 />
-                    </a>
-                    Hospitals
-                </div>
-                <div className="nav-item">
+            <nav className={`nav-links ${sidebarOpen ? "open" : " "}`}>
+                <Link to="/"><div className="nav-item">
 
-                    <a href="#">
+                    <Building2 />
+                    <span>Hospitals</span>
+                </div>
+                </Link>
+                <Link to="/robots">
+
+                    <div className="nav-item">
                         <Bot />
-                    </a>
-                    Robots
-                </div>
-                <div className="nav-item">
-                    <a href="#">
+                        <span>Robots</span>
+                    </div>
+                </Link>
+                <Link to="/security">
+                    <div className="nav-item">
                         <Shield />
-                    </a>
-                    Security
-                </div>
-                <div className="nav-item">
-                    <a href="#">
+                        <span>Security</span>
+                    </div>
+                </Link>
+                <Link to="/activity">
+                    <div className="nav-item">
                         <Activity />
-                    </a>
-                    Activity
-                </div>
+                        <span>Activity</span>
+                    </div>
+                </Link>
+
             </nav>
 
             <div className="user-profile">
+                <button
+                    className="hamburger"
+                    onClick={() => setSidebarOpen(!sidebarOpen)}
+                >
+                    <Menu size={40} />
+                </button>
                 <div className="profile-info">
                     <img
                         src="https://ui-avatars.com/api/?name=Admin&background=6366f1&color=fff&size=32"
@@ -51,10 +61,10 @@ const Sidebar = () => {
                         <p>admin@navtar.com</p>
                     </div>
                 </div>
-                <button>Logout</button>
+                <button className='logout'>Logout</button>
             </div>
         </aside>
-    )
-}
+    );
+};
 
 export default Sidebar;

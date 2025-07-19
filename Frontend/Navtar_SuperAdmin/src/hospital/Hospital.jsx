@@ -100,9 +100,6 @@ function Hospital() {
 
   return (
     <div className="hospital-container">
-
-      <Sidebar />
-
       <div className="main-content">
         <header className="header">
           <div className="header-content">

@@ -99,33 +99,33 @@ def search_hospitals(db: Session, search_query: Optional[str] = None):
         query = query.filter(Hospital.hospital_name.ilike(f"%{search_query}%"))
     return query.all()
 
-from sqlalchemy.orm import Session
-from models import Hospital, Admin as AdminModel
-from fastapi import HTTPException
-from schemas.hospital import HospitalWithAdmin
+# from sqlalchemy.orm import Session
+# from models import Hospital, Admin as AdminModel
+# from fastapi import HTTPException
+# from schemas.hospital import HospitalWithAdmin
 
-def create_hospital_with_admin(db: Session, data: HospitalWithAdmin):
-    # Check for existing hospital
-    existing = db.query(Hospital).filter(
-        Hospital.hospital_name == data.hospital.hospital_name,
-        Hospital.pincode == data.hospital.pincode
-    ).first()
-    if existing:
-        raise HTTPException(status_code=400, detail="Hospital already exists.")
+# def create_hospital_with_admin(db: Session, data: HospitalWithAdmin):
+#     # Check for existing hospital
+#     existing = db.query(Hospital).filter(
+#         Hospital.hospital_name == data.hospital.hospital_name,
+#         Hospital.pincode == data.hospital.pincode
+#     ).first()
+#     if existing:
+#         raise HTTPException(status_code=400, detail="Hospital already exists.")
 
-    # Create hospital
-    new_hospital = Hospital(**data.hospital.dict())
-    db.add(new_hospital)
-    db.commit()
-    db.refresh(new_hospital)
+#     # Create hospital
+#     new_hospital = Hospital(**data.hospital.dict())
+#     db.add(new_hospital)
+#     db.commit()
+#     db.refresh(new_hospital)
 
-    # Create admin
-    if db.query(AdminModel).filter(AdminModel.email == data.admin.email).first():
-        raise HTTPException(status_code=409, detail="Admin email already exists.")
+#     # Create admin
+#     if db.query(AdminModel).filter(AdminModel.email == data.admin.email).first():
+#         raise HTTPException(status_code=409, detail="Admin email already exists.")
 
-    new_admin = AdminModel(**data.admin.dict(), hospital_id=new_hospital.hospital_id)
-    db.add(new_admin)
-    db.commit()
-    db.refresh(new_admin)
+#     new_admin = AdminModel(**data.admin.dict(), hospital_id=new_hospital.hospital_id)
+#     db.add(new_admin)
+#     db.commit()
+#     db.refresh(new_admin)
 
-    return {"hospital": new_hospital, "admin": new_admin}
+#     return {"hospital": new_hospital, "admin": new_admin}
