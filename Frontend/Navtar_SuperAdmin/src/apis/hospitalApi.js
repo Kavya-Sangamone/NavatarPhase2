@@ -1,4 +1,4 @@
-import axios from '../axiosInstance';
+import axios from './axiosInstance';
 
 const BASE_URL = "/superadmin/hospital";
 

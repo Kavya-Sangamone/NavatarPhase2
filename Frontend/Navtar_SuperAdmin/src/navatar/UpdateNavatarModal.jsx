@@ -1,14 +1,14 @@
-import React, { useState } from "react";
-import countryList from 'react-select-country-list';
-import { createHospital } from "../apis/hospitalApi";
-import { Loader2 } from 'lucide-react';
+import React, { useState, useEffect } from "react";
+import { updateNavatar } from "../apis/navatarApi";
+import Select from "react-select";
 import Modal from "../Modal";
+import { Loader2 } from 'lucide-react';
 
-const AddHospitalModal = ({ onClose, fetchHospitals }) => {
+const UpdateNavatarModal = ({ navatarData, onClose, fetchNavatars, hospitalMap }) => {
   const [formData, setFormData] = useState({
-    hospital_name: "",
-    country: "",
-    pincode: "",
+    navatar_name: '',
+    hospital_id: '',
+    status: "Offline",
   });
   const [loading, setLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -19,28 +19,49 @@ const AddHospitalModal = ({ onClose, fetchHospitals }) => {
     onCancel: null,
   });
 
-  const countryOptions = countryList().getData();
+  useEffect(() => {
+    if (navatarData) {
+      setFormData({
+        navatar_name: navatarData.navatar_name || "",
+        hospital_id: String(navatarData.hospital_id) || "",
+        status: navatarData.status || "Offline",
+      });
+    }
+  }, [navatarData]);
+
+  const hospitalOptions = Object.entries(hospitalMap).map(([id, name]) => ({
+    value: String(id),
+    label: name,
+  }));
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
     try {
-      await createHospital(formData);
+      setLoading(true);
+      await updateNavatar(navatarData.navatar_id, {
+        ...formData,
+        hospital_id: Number(formData.hospital_id),
+      });
+
       setModalConfig({
         title: "Success",
-        message: "Hospital added successfully!",
+        message: "Navatar updated successfully!",
         onConfirm: () => {
           setIsModalOpen(false);
-          setFormData({ hospital_name: "", country: "", pincode: "" });
+          setFormData({
+            navatar_name: "",
+            hospital_id: "",
+            status: "Offline",
+          });
           onClose();
+          fetchNavatars();
         },
       });
-      await fetchHospitals();
       setIsModalOpen(true);
     } catch (err) {
       setModalConfig({
         title: "Error",
-        message: `${err.response?.data?.detail || "Something went wrong"}`,
+        message: `Error: ${err.response?.data?.detail || "Something went wrong"}`,
         onConfirm: () => setIsModalOpen(false),
       });
       setIsModalOpen(true);
@@ -56,16 +77,16 @@ const AddHospitalModal = ({ onClose, fetchHospitals }) => {
           &times;
         </button>
 
-        <h2 className="modal-title">Add Hospital</h2>
+        <h2 className="modal-title">Update Navatar</h2>
 
         <form onSubmit={handleSubmit} className="form">
           <div className="form-group">
-            <label className="form-label">Hospital Name</label>
+            <label className="form-label">Navatar Name</label>
             <input
               type="text"
-              value={formData.hospital_name}
+              value={formData.navatar_name}
               onChange={(e) =>
-                setFormData({ ...formData, hospital_name: e.target.value })
+                setFormData({ ...formData, navatar_name: e.target.value })
               }
               required
               className="form-input"
@@ -73,34 +94,18 @@ const AddHospitalModal = ({ onClose, fetchHospitals }) => {
           </div>
 
           <div className="form-group">
-            <label className="form-label">Country</label>
-            <select
-              value={formData.country}
-              onChange={(e) =>
-                setFormData({ ...formData, country: e.target.value })
+            <label className="form-label">Hospital</label>
+            <Select
+              name="hospital_id"
+              value={hospitalOptions.find(
+                (option) => option.value === String(formData.hospital_id)
+              )}
+              onChange={(selectedOption) =>
+                setFormData({ ...formData, hospital_id: selectedOption?.value || "" })
               }
-              required
-              className="form-input"
-            >
-              <option value="" disabled>Select Country</option>
-              {countryOptions.map((country) => (
-                <option key={country.value} value={country.label}>
-                  {country.label}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div className="form-group">
-            <label className="form-label">Pincode</label>
-            <input
-              type="text"
-              value={formData.pincode}
-              onChange={(e) =>
-                setFormData({ ...formData, pincode: e.target.value })
-              }
-              required
-              className="form-input"
+              options={hospitalOptions}
+              placeholder="Select Hospital"
+              isClearable
             />
           </div>
 
@@ -116,16 +121,17 @@ const AddHospitalModal = ({ onClose, fetchHospitals }) => {
               {loading ? (
                 <span className="button-loading">
                   <Loader2 className="spinner" />
-                  Adding...
+                  Updating...
                 </span>
               ) : (
-                "Add Hospital"
+                "Update Hospital"
               )}
             </button>
 
           </div>
         </form>
       </div>
+
       <Modal
         isOpen={isModalOpen}
         title={modalConfig.title}
@@ -137,4 +143,4 @@ const AddHospitalModal = ({ onClose, fetchHospitals }) => {
   );
 };
 
-export default AddHospitalModal;
+export default UpdateNavatarModal;

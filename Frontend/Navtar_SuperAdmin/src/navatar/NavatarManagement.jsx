@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { Search, RefreshCcw, MapPin, Calendar, Bot, Building2, Eye, Edit3, Trash2 } from 'lucide-react';
-import { deleteHospital } from '../apis/hospitalApi';
-import UpdateHospitalModal from './UpdateHospitalModal';
-import Modal from '../Modal';
+import { Search, RefreshCcw, Calendar, Bot, Building2, Eye, Edit3, Trash2 } from 'lucide-react';
+import { deleteNavatar } from '../apis/navatarApi';
+import UpdateNavatarModal from './UpdateNavatarModal';
+import { fetchHospitals } from '../apis/hospitalApi';
+import Modal from "../Modal";
 
-function HospitalManagement({ hospitals, fetchHospitals }) {
+function NavatarManagement({ navatars, fetchNavatars }) {
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedHospital, setSelectedHospital] = useState(null);
+  const [selectedNavatar, setSelectedNavatar] = useState(null);
   const [showEditModal, setShowEditModal] = useState(false);
+  const [hospitalMap, setHospitalMap] = useState({});
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -18,30 +20,51 @@ function HospitalManagement({ hospitals, fetchHospitals }) {
     onCancel: null,
   });
 
+  const loadHospitals = async () => {
+    try {
+      const res = await fetchHospitals();
+      const map = {};
+      res.data.forEach(h => {
+        map[h.hospital_id] = h.hospital_name;
+      });
+      setHospitalMap(map);
+    } catch (err) {
+      console.error("Failed to fetch hospitals", err);
+    }
+  };
+
+  useEffect(() => {
+    loadHospitals();
+  }, []);
+
   const formatDate = (dateStr) => {
     const date = new Date(dateStr);
     return date.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
   };
 
-  const handleEditHospital = (hospital) => {
-    setSelectedHospital(hospital);
+  const handleEditNavatar = (navatar) => {
+    setSelectedNavatar({
+      ...navatar,
+      hospital_id: navatar.hospital_id
+    });
     setShowEditModal(true);
   };
-  const handleDeleteHospital = (id) => {
+
+  const handleDeleteNavatar = (id) => {
     setModalConfig({
       title: "Confirm Deletion",
       message: "Are you sure you want to delete this Navatar?",
       onConfirm: async () => {
         setIsLoading(true);
         try {
-          await deleteHospital(id);
+          await deleteNavatar(id);
           setIsLoading(false);
           setModalConfig({
             title: "Deleted",
-            message: "Hospital deleted successfully!",
+            message: "Navatar deleted successfully!",
             onConfirm: () => {
               setIsModalOpen(false);
-              fetchHospitals();
+              fetchNavatars();
             },
             onCancel: null,
           });
@@ -60,27 +83,28 @@ function HospitalManagement({ hospitals, fetchHospitals }) {
     setIsModalOpen(true);
   };
 
+
   const handleRefresh = async () => {
     setIsRefreshing(true);
     setSearchTerm("");
-    await fetchHospitals();
+    await loadHospitals();
+    await fetchNavatars();
     setIsRefreshing(false);
   };
 
-
-  const filteredHospitals = hospitals.filter(hospital =>
-    hospital.hospital_name?.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredNavatar = navatars.filter(navatar =>
+    navatar.navatar_name?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
     <div className="management-container">
       <div className="header-section">
-        <h2 className="title">Hospital Management</h2>
+        <h2 className="title">Navatar Management</h2>
         <div className="search-wrapper">
           <Search className="search-icon" />
           <input
             type="text"
-            placeholder="Search hospitals..."
+            placeholder="Search Navatar..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="search-input"
@@ -96,33 +120,36 @@ function HospitalManagement({ hospitals, fetchHospitals }) {
         <table className="table">
           <thead>
             <tr>
-              <th>Hospital</th>
-              <th>Location</th>
+              <th>Navatar</th>
+              <th>Assigned Hospital</th>
               <th>Created</th>
-              <th>Navatars</th>
               <th>Actions</th>
             </tr>
           </thead>
           <tbody>
-            {filteredHospitals.map((hospital) => (
-              <tr key={hospital.hospital_id}>
+            {filteredNavatar.map((navatar) => (
+              <tr key={navatar.navatar_id}>
                 <td>
                   <div className="info">
-                    <div className="icon"><Building2 /></div>
+                    <div className="icon"><Bot /></div>
                     <div>
-                      <div className="name">{hospital.hospital_name}</div>
-                      <div className="email">{hospital.contactEmail}</div>
+                      <div className="name">{navatar.navatar_name}</div>
                     </div>
                   </div>
                 </td>
-                <td><MapPin className="inline-icon" />{hospital.country}</td>
-                <td><Calendar className="inline-icon" />{formatDate(hospital.created_at)}</td>
-                <td><Bot className="inline-icon purple" /><span>{hospital.totalNavatars} </span></td>
+                <td>
+                  <Building2 className="inline-icon" />
+                  {hospitalMap[navatar.hospital_id] || 'Not Assigned'}
+                </td>
+                <td>
+                  <Calendar className="inline-icon" />
+                  {formatDate(navatar.created_at)}
+                </td>
                 <td>
                   <div className="action-buttons">
                     <button title="View Details"><Eye /></button>
-                    <button onClick={() => handleEditHospital(hospital)} title="Edit"><Edit3 /></button>
-                    <button onClick={() => handleDeleteHospital(hospital.hospital_id)} title="Delete"><Trash2 /></button>
+                    <button onClick={() => handleEditNavatar(navatar)} title="Edit"><Edit3 /></button>
+                    <button onClick={() => handleDeleteNavatar(navatar.navatar_id)} title="Delete"><Trash2 /></button>
                   </div>
                 </td>
               </tr>
@@ -130,18 +157,20 @@ function HospitalManagement({ hospitals, fetchHospitals }) {
           </tbody>
         </table>
 
-        {filteredHospitals.length === 0 && (
+        {filteredNavatar.length === 0 && (
           <div className="empty-state">
             <Building2 className="empty-icon" />
-            <p>No hospitals found matching your criteria</p>
+            <p>No Navatar found matching your criteria</p>
           </div>
         )}
       </div>
+
       {showEditModal && (
-        <UpdateHospitalModal
-          hospitalData={selectedHospital}
+        <UpdateNavatarModal
+          navatarData={selectedNavatar}
           onClose={() => setShowEditModal(false)}
-          fetchHospitals={fetchHospitals}
+          fetchNavatars={fetchNavatars}
+          hospitalMap={hospitalMap}
         />
       )}
       <Modal
@@ -156,4 +185,4 @@ function HospitalManagement({ hospitals, fetchHospitals }) {
   );
 }
 
-export default HospitalManagement;
+export default NavatarManagement;
