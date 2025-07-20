@@ -1,16 +1,13 @@
 import React, { useState } from "react";
-import countryList from 'react-select-country-list';
-import { createHospital } from "../apis/hospitalApi";
-import { Loader2 } from 'lucide-react';
+import { createNavatar } from "../apis/navatarApi";
 import Modal from "../Modal";
+import { Loader2 } from 'lucide-react';
 
-const AddHospitalModal = ({ onClose, fetchHospitals }) => {
+const AddNavatarModal = ({ onClose, fetchNavatars }) => {
   const [formData, setFormData] = useState({
-    hospital_name: "",
-    country: "",
-    pincode: "",
+    navatar_name: "",
+    status: "Offline"
   });
-  const [loading, setLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalConfig, setModalConfig] = useState({
     title: "",
@@ -18,24 +15,23 @@ const AddHospitalModal = ({ onClose, fetchHospitals }) => {
     onConfirm: () => { },
     onCancel: null,
   });
-
-  const countryOptions = countryList().getData();
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     try {
-      await createHospital(formData);
+      await createNavatar(formData);
       setModalConfig({
         title: "Success",
-        message: "Hospital added successfully!",
+        message: "Navatar added successfully!",
         onConfirm: () => {
           setIsModalOpen(false);
-          setFormData({ hospital_name: "", country: "", pincode: "" });
+          setFormData({ navatar_name: "" });
           onClose();
         },
       });
-      await fetchHospitals();
+      await fetchNavatars();
       setIsModalOpen(true);
     } catch (err) {
       setModalConfig({
@@ -56,48 +52,16 @@ const AddHospitalModal = ({ onClose, fetchHospitals }) => {
           &times;
         </button>
 
-        <h2 className="modal-title">Add Hospital</h2>
+        <h2 className="modal-title">Add Navatar</h2>
 
         <form onSubmit={handleSubmit} className="form">
           <div className="form-group">
-            <label className="form-label">Hospital Name</label>
+            <label className="form-label">Navatar Name</label>
             <input
               type="text"
-              value={formData.hospital_name}
+              value={formData.navatar_name}
               onChange={(e) =>
-                setFormData({ ...formData, hospital_name: e.target.value })
-              }
-              required
-              className="form-input"
-            />
-          </div>
-
-          <div className="form-group">
-            <label className="form-label">Country</label>
-            <select
-              value={formData.country}
-              onChange={(e) =>
-                setFormData({ ...formData, country: e.target.value })
-              }
-              required
-              className="form-input"
-            >
-              <option value="" disabled>Select Country</option>
-              {countryOptions.map((country) => (
-                <option key={country.value} value={country.label}>
-                  {country.label}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div className="form-group">
-            <label className="form-label">Pincode</label>
-            <input
-              type="text"
-              value={formData.pincode}
-              onChange={(e) =>
-                setFormData({ ...formData, pincode: e.target.value })
+                setFormData({ ...formData, navatar_name: e.target.value })
               }
               required
               className="form-input"
@@ -119,10 +83,9 @@ const AddHospitalModal = ({ onClose, fetchHospitals }) => {
                   Adding...
                 </span>
               ) : (
-                "Add Hospital"
+                "Add Navatar"
               )}
             </button>
-
           </div>
         </form>
       </div>
@@ -133,8 +96,10 @@ const AddHospitalModal = ({ onClose, fetchHospitals }) => {
         onConfirm={modalConfig.onConfirm}
         onCancel={modalConfig.onCancel}
       />
+
     </div>
+
   );
 };
 
-export default AddHospitalModal;
+export default AddNavatarModal;

@@ -4,8 +4,8 @@ from database import get_db
 from crud import hospital as hospital_crud
 from schemas import hospital as hospital_schema
 from typing import Optional
-from schemas.hospital import HospitalWithAdmin
-from crud.hospital import create_hospital_with_admin
+# from schemas.hospital import HospitalWithAdmin
+# from crud.hospital import create_hospital_with_admin
 
 router = APIRouter(prefix="/superadmin/hospital", tags=["Hospitals"])
 

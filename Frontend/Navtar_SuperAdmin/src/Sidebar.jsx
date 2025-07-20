@@ -1,9 +1,13 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Building2, Shield, Activity, Bot, Menu } from 'lucide-react';
+import { NavLink } from 'react-router-dom';
+import { Building2, Shield, Activity, Bot, Menu, X } from 'lucide-react';
 
 const Sidebar = () => {
     const [sidebarOpen, setSidebarOpen] = useState(false);
+    const linkStyle = ({ isActive }) => ({
+        color: isActive ? '#2828cd' : '#333',
+        borderBottom: isActive ? '2px solid currentColor' : 'none',
+    });
 
     return (
         <aside className="sidebar">
@@ -15,32 +19,31 @@ const Sidebar = () => {
                 <span>Super Admin</span>
             </div>
 
-            <nav className={`nav-links ${sidebarOpen ? "open" : " "}`}>
-                <Link to="/"><div className="nav-item">
-
-                    <Building2 />
-                    <span>Hospitals</span>
-                </div>
-                </Link>
-                <Link to="/robots">
-
-                    <div className="nav-item">
-                        <Bot />
-                        <span>Robots</span>
-                    </div>
-                </Link>
-                <Link to="/security">
-                    <div className="nav-item">
-                        <Shield />
-                        <span>Security</span>
-                    </div>
-                </Link>
-                <Link to="/activity">
+            <nav className={`nav-links ${sidebarOpen ? "open" : ""}`}>
+                <NavLink to="/" style={linkStyle}>
                     <div className="nav-item">
                         <Activity />
                         <span>Activity</span>
                     </div>
-                </Link>
+                </NavLink>
+                <NavLink to="/hospitals" style={linkStyle}>
+                    <div className="nav-item">
+                        <Building2 />
+                        <span>Hospitals</span>
+                    </div>
+                </NavLink>
+                <NavLink to="/navatars" style={linkStyle}>
+                    <div className="nav-item">
+                        <Bot />
+                        <span>Navatars</span>
+                    </div>
+                </NavLink>
+                <NavLink to="/security" style={linkStyle}>
+                    <div className="nav-item">
+                        <Shield />
+                        <span>Security</span>
+                    </div>
+                </NavLink>
 
             </nav>
 
@@ -49,7 +52,7 @@ const Sidebar = () => {
                     className="hamburger"
                     onClick={() => setSidebarOpen(!sidebarOpen)}
                 >
-                    <Menu size={40} />
+                    {!sidebarOpen ? <Menu size={40} /> : <X size={40} />}
                 </button>
                 <div className="profile-info">
                     <img
