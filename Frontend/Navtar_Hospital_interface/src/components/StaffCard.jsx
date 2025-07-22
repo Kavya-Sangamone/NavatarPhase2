@@ -1,67 +1,70 @@
-import React from 'react';
 import { Mail, Phone, Stethoscope, Heart, Trash2, Edit } from 'lucide-react';
-import { StaffRoles } from '../types/staff';
+import '../App.css';
 
 export const StaffCard = ({ staff, onDelete, onEdit }) => {
   const roleColors = {
-    [StaffRoles.DOCTOR]: 'bg-blue-100 text-blue-800',
-    [StaffRoles.NURSE]: 'bg-green-100 text-green-800'
+    ["Doctor"]: 'doctor-role',
+    ["Nurse"]: 'nurse-role'
   };
 
   const roleIcons = {
-    [StaffRoles.DOCTOR]: <Stethoscope className="w-4 h-4" />,
-    [StaffRoles.NURSE]: <Heart className="w-4 h-4" />
+    ["Doctor"]: <Stethoscope className="icon-small" />,
+    ["Nurse"]: <Heart className="icon-small" />
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow duration-200 border border-gray-200">
-      <div className="p-6">
-        <div className="flex items-start justify-between mb-4">
-          <div className="flex items-center gap-3">
-            <div className={`p-2 rounded-lg ${roleColors[staff.role]}`}>
+    <div className="staff-card">
+      <div className="card-content">
+        <div className="card-header">
+          <div className="staff-info">
+            <div className={`role-icon ${roleColors[staff.role]}`}>
               {roleIcons[staff.role]}
             </div>
             <div>
-              <h3 className="font-semibold text-gray-800 text-lg">{staff.name}</h3>
-              <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${roleColors[staff.role]}`}>
+              <h3 className="staff-name">{staff.name}</h3>
+              <span className={`role-badge ${roleColors[staff.role]}`}>
                 {staff.role.charAt(0).toUpperCase() + staff.role.slice(1)}
               </span>
             </div>
           </div>
-          <div className="flex gap-2">
+          <div className="action-buttons">
             <button
               onClick={() => onEdit(staff)}
-              className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+              className="edit-button"
             >
-              <Edit className="w-4 h-4" />
+              <Edit className="icon-small" />
             </button>
             <button
-              onClick={() => onDelete(staff.id)}
-              className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+              onClick={() => onDelete(staff.id, staff.role)}
+              className="delete-button"
             >
-              <Trash2 className="w-4 h-4" />
+              <Trash2 className="icon-small" />
             </button>
           </div>
         </div>
 
-        <div className="space-y-3">
-          <div className="flex items-center gap-3 text-gray-600">
-            <Mail className="w-4 h-4" />
-            <span className="text-sm">{staff.email}</span>
+        <div className="staff-details">
+          <div className="detail-item">
+            <Mail className="icon-small" />
+            <span>{staff.email}</span>
           </div>
-          
-          {staff.phone && (
-            <div className="flex items-center gap-3 text-gray-600">
-              <Phone className="w-4 h-4" />
-              <span className="text-sm">{staff.phone}</span>
+          {staff.role === "Nurse" && staff.assigned_doctor && (
+            <div className="assigned-doctor-info">
+              <span className="label">Assigned Doctor</span>
+              <span className="value">{staff.assigned_doctor.name}</span>
             </div>
           )}
 
-          <div className="pt-2 border-t border-gray-100">
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-gray-500">Department</span>
-              <span className="text-sm font-medium text-gray-800">{staff.department}</span>
+          {staff.phone && (
+            <div className="detail-item">
+              <Phone className="icon-small" />
+              <span>{staff.phone}</span>
             </div>
+          )}
+
+          <div className="department-info">
+            <span className="label">Department</span>
+            <span className="value">{staff.department}</span>
           </div>
         </div>
       </div>

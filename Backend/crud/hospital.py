@@ -104,34 +104,3 @@ def get_hospital_by_id(hospital_id: int, db: Session):
     if not hospital:
         raise HTTPException(status_code=404, detail="Hospital not found")
     return hospital
-
-# from sqlalchemy.orm import Session
-# from models import Hospital, Admin as AdminModel
-# from fastapi import HTTPException
-# from schemas.hospital import HospitalWithAdmin
-
-# def create_hospital_with_admin(db: Session, data: HospitalWithAdmin):
-#     # Check for existing hospital
-#     existing = db.query(Hospital).filter(
-#         Hospital.hospital_name == data.hospital.hospital_name,
-#         Hospital.pincode == data.hospital.pincode
-#     ).first()
-#     if existing:
-#         raise HTTPException(status_code=400, detail="Hospital already exists.")
-
-#     # Create hospital
-#     new_hospital = Hospital(**data.hospital.dict())
-#     db.add(new_hospital)
-#     db.commit()
-#     db.refresh(new_hospital)
-
-#     # Create admin
-#     if db.query(AdminModel).filter(AdminModel.email == data.admin.email).first():
-#         raise HTTPException(status_code=409, detail="Admin email already exists.")
-
-#     new_admin = AdminModel(**data.admin.dict(), hospital_id=new_hospital.hospital_id)
-#     db.add(new_admin)
-#     db.commit()
-#     db.refresh(new_admin)
-
-#     return {"hospital": new_hospital, "admin": new_admin}

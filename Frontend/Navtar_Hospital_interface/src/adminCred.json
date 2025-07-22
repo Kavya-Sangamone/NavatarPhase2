@@ -1,0 +1,6 @@
+{
+  "admin_name": "string",
+  "hospital_id": 13,
+  "email": "user@example.com",
+  "password": "string"
+}

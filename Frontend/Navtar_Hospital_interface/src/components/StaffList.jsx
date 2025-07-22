@@ -1,115 +1,227 @@
 import React, { useState } from 'react';
-import { Search, Filter, Users, UserCheck, Stethoscope, Heart } from 'lucide-react';
-import { StaffRoles, createStaffFilters } from '../types/staff';
+import {
+  Search,
+  Filter,
+  Users,
+  UserCheck,
+  Stethoscope,
+  Heart,
+  Bot
+} from 'lucide-react';
 import { StaffCard } from './StaffCard';
+import '../App.css';
 
-export const StaffList = ({ staff, onDelete, onEdit }) => {
-  const [filters, setFilters] = useState(createStaffFilters());
-
-  const filteredStaff = staff.filter(member => {
-    const matchesRole = filters.role === 'all' || member.role === filters.role;
-    const matchesSearch = member.name.toLowerCase().includes(filters.searchTerm.toLowerCase()) ||
-                         member.email.toLowerCase().includes(filters.searchTerm.toLowerCase()) ||
-                         (member.department && member.department.toLowerCase().includes(filters.searchTerm.toLowerCase()));
-    return matchesRole && matchesSearch;
+export const StaffList = ({ staff, navatars, onDelete, onEdit }) => {
+  const [filters, setFilters] = useState({
+    role: 'all',
+    searchTerm: ''
+  });
+  const [navatarFilters, setNavatarFilters] = useState({
+    searchTerm: '',
+    status: 'all',
   });
 
-  const doctorCount = staff.filter(s => s.role === StaffRoles.DOCTOR).length;
-  const nurseCount = staff.filter(s => s.role === StaffRoles.NURSE).length;
+
+  const filteredStaff = staff.filter((member) => {
+    const roleMatch = filters.role === 'all' || member.role === filters.role;
+
+    const searchTerm = filters.searchTerm || "";
+
+    const nameMatch = (member.name || '').toLowerCase().includes(searchTerm);
+    const departmentMatch = (member.department || '').toLowerCase().includes(searchTerm);
+
+    return roleMatch && (nameMatch || departmentMatch);
+  });
+
+  const filteredNavatars = navatars.filter((nav) => {
+    const nameMatch = (nav.name || '').toLowerCase().includes(navatarFilters.searchTerm.toLowerCase());
+    const statusMatch = navatarFilters.status === 'all' || nav.status === navatarFilters.status;
+    return nameMatch && statusMatch;
+  });
+
+
+  const doctorCount = staff.filter((s) => s.role === "Doctor").length;
+  const nurseCount = staff.filter((s) => s.role === "Nurse").length;
+  const navatarCount = navatars.length;
 
   return (
-    <div className="space-y-6">
+    <div className="staff-list-container">
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="bg-white rounded-xl shadow-md p-6 border border-gray-200">
-          <div className="flex items-center gap-4">
-            <div className="p-3 bg-blue-100 rounded-lg">
-              <Users className="w-6 h-6 text-blue-600" />
+      <div className="stats-grid">
+        <div className="stats-card">
+          <div className="stats-content">
+            <div className="stats-icon icon-blue">
+              <Users className="icon-lg text-blue" />
             </div>
             <div>
-              <p className="text-2xl font-bold text-gray-800">{staff.length}</p>
-              <p className="text-sm text-gray-600">Total Staff</p>
+              <p className="stats-number">{staff.length}</p>
+              <p className="stats-label">Total Staff</p>
             </div>
           </div>
         </div>
 
-        <div className="bg-white rounded-xl shadow-md p-6 border border-gray-200">
-          <div className="flex items-center gap-4">
-            <div className="p-3 bg-blue-100 rounded-lg">
-              <Stethoscope className="w-6 h-6 text-blue-600" />
+        <div className="stats-card">
+          <div className="stats-content">
+            <div className="stats-icon icon-blue">
+              <Stethoscope className="icon-lg text-blue" />
             </div>
             <div>
-              <p className="text-2xl font-bold text-gray-800">{doctorCount}</p>
-              <p className="text-sm text-gray-600">Doctors</p>
+              <p className="stats-number">{doctorCount}</p>
+              <p className="stats-label">Doctors</p>
             </div>
           </div>
         </div>
 
-        <div className="bg-white rounded-xl shadow-md p-6 border border-gray-200">
-          <div className="flex items-center gap-4">
-            <div className="p-3 bg-green-100 rounded-lg">
-              <Heart className="w-6 h-6 text-green-600" />
+        <div className="stats-card">
+          <div className="stats-content">
+            <div className="stats-icon icon-green">
+              <Heart className="icon-lg text-green" />
             </div>
             <div>
-              <p className="text-2xl font-bold text-gray-800">{nurseCount}</p>
-              <p className="text-sm text-gray-600">Nurses</p>
+              <p className="stats-number">{nurseCount}</p>
+              <p className="stats-label">Nurses</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="stats-card">
+          <div className="stats-content">
+            <div className="stats-icon icon-green">
+              <Bot className="icon-lg text-green" />
+            </div>
+            <div>
+              <p className="stats-number">{navatarCount}</p>
+              <p className="stats-label">Navatars</p>
             </div>
           </div>
         </div>
       </div>
+      <div className="sections">
+        <div className="staff-section">
+          <div className="filters-card">
+            <div className="filters-container">
+              <div className="search-input-wrapper">
+                <Search className="search-icon" />
+                <input
+                  type="text"
+                  placeholder="Search by name, or department..."
+                  value={filters.searchTerm}
+                  onChange={(e) =>
+                    setFilters((prev) => ({ ...prev, searchTerm: e.target.value }))
+                  }
+                  className="search-input"
+                />
+              </div>
 
-      {/* Filters */}
-      <div className="bg-white rounded-xl shadow-md p-6 border border-gray-200">
-        <div className="flex flex-col sm:flex-row gap-4">
-          <div className="flex-1 relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-            <input
-              type="text"
-              placeholder="Search by name, email, or department..."
-              value={filters.searchTerm}
-              onChange={(e) => setFilters(prev => ({ ...prev, searchTerm: e.target.value }))}
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
-            />
+              <div className="role-select-wrapper">
+                <Filter className="filter-icon" />
+                <select
+                  value={filters.role}
+                  onChange={(e) =>
+                    setFilters((prev) => ({ ...prev, role: e.target.value }))
+                  }
+                  className="role-select"
+                >
+                  <option value="all">All Roles</option>
+                  <option value={"Doctor"}>Doctors</option>
+                  <option value={"Nurse"}>Nurses</option>
+                </select>
+              </div>
+            </div>
           </div>
-          
-          <div className="flex items-center gap-2">
-            <Filter className="w-5 h-5 text-gray-400" />
-            <select
-              value={filters.role}
-              onChange={(e) => setFilters(prev => ({ ...prev, role: e.target.value }))}
-              className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
-            >
-              <option value="all">All Roles</option>
-              <option value={StaffRoles.DOCTOR}>Doctors</option>
-              <option value={StaffRoles.NURSE}>Nurses</option>
-            </select>
-          </div>
-        </div>
-      </div>
 
-      {/* Staff Grid */}
-      {filteredStaff.length === 0 ? (
-        <div className="text-center py-12">
-          <UserCheck className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-          <h3 className="text-lg font-medium text-gray-600 mb-2">No staff members found</h3>
-          <p className="text-gray-500">
-            {filters.searchTerm || filters.role !== 'all' 
-              ? 'Try adjusting your search or filters' 
-              : 'Add your first staff member to get started'}
-          </p>
+          {/* Staff Grid */}
+          {
+            filteredStaff.length === 0 ? (
+              <div className="no-results">
+                <UserCheck className="no-results-icon" />
+                <h3 className="no-results-title">No staff members found</h3>
+                <p className="no-results-subtext">
+                  {filters.searchTerm || filters.role !== 'all'
+                    ? 'Try adjusting your search or filters'
+                    : 'Add your first staff member to get started'}
+                </p>
+              </div>
+            ) : (
+              <div className="staff-grid">
+                {filteredStaff.map((member) => (
+                  <StaffCard
+                    key={`${member.role}-${member.id}`}
+                    staff={member}
+                    onDelete={onDelete}
+                    onEdit={onEdit}
+                  />
+                ))}
+              </div>
+            )
+          }
         </div>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredStaff.map(member => (
-            <StaffCard
-              key={member.id}
-              staff={member}
-              onDelete={onDelete}
-              onEdit={onEdit}
-            />
-          ))}
+        <div className="navatar-section">
+          {/* Navatar Filters */}
+          <div className="filters-card">
+            <div className="filters-container">
+              <div className="search-input-wrapper">
+                <Search className="search-icon" />
+                <input
+                  type="text"
+                  placeholder="Search Navatars by name..."
+                  value={navatarFilters.searchTerm}
+                  onChange={(e) =>
+                    setNavatarFilters((prev) => ({
+                      ...prev,
+                      searchTerm: e.target.value
+                    }))
+                  }
+                  className="search-input"
+                />
+              </div>
+
+              <div className="role-select-wrapper">
+                <Filter className="filter-icon" />
+                <select
+                  value={navatarFilters.status}
+                  onChange={(e) =>
+                    setNavatarFilters((prev) => ({
+                      ...prev,
+                      status: e.target.value
+                    }))
+                  }
+                  className="role-select"
+                >
+                  <option value="all">All Status</option>
+                  <option value="Available">Available</option>
+                  <option value="Booked">Booked</option>
+                  <option value="InSession">InSession</option>
+                  <option value="Offline">Offline</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          {/* Navatar Grid */}
+          {filteredNavatars.length === 0 ? (
+            <div className="no-results">
+              <Bot className="no-results-icon" />
+              <h3 className="no-results-title">No Navatars found</h3>
+              <p className="no-results-subtext">
+                {navatarFilters.searchTerm || navatarFilters.status !== 'all'
+                  ? 'Try adjusting your search or status filter'
+                  : 'Add your first Navatar to get started'}
+              </p>
+            </div>
+          ) : (
+            <div className="navatar-grid">
+              {filteredNavatars.map((nav) => (
+                <StaffCard
+                  key={`Navatar-${nav.id}`}
+                  staff={{ ...nav, role: 'Navatar' }}
+                  onDelete={onDelete}
+                  onEdit={onEdit}
+                />
+              ))}
+            </div>
+          )}
         </div>
-      )}
-    </div>
+      </div >
+    </div >
   );
 };

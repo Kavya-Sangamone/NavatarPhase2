@@ -1,50 +1,51 @@
 import React, { useState } from 'react';
 import { Plus, UserPlus, X } from 'lucide-react';
-import { StaffRoles } from '../types/staff';
+import '../App.css';
 
-export const AddStaffForm = ({ onAddStaff, isOpen, onClose }) => {
+export const AddStaffForm = ({ onAddStaff, isOpen, onClose, doctors }) => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
-    role: StaffRoles.DOCTOR,
+    role: 'Doctor',
     department: '',
-    phone: ''
+    phone: '',
+    gender: 'Male',
+    assigned_doctor_id: '',
   });
 
   const [errors, setErrors] = useState({});
+  const doctorDepartments = ["Cardiology", "Surgery", "Pediatrics", "Neurology"];
+  const nurseDepartments = ["ICU", "Pediatrics", "Emergency", "Ward"];
 
   const validateForm = () => {
     const newErrors = {};
-    
-    if (!formData.name.trim()) {
-      newErrors.name = 'Name is required';
-    }
-    
+    if (!formData.name.trim()) newErrors.name = 'Name is required';
     if (!formData.email.trim()) {
       newErrors.email = 'Email is required';
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
       newErrors.email = 'Please enter a valid email address';
     }
-    
-    if (!formData.department.trim()) {
-      newErrors.department = 'Department is required';
+    if (!formData.department.trim()) newErrors.department = 'Department is required';
+    if (formData.role === 'Nurse' && !formData.assigned_doctor_id) {
+      newErrors.assigned_doctor_id = 'Please assign a doctor to the nurse';
     }
-    
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
     if (validateForm()) {
       onAddStaff(formData);
       setFormData({
         name: '',
         email: '',
-        role: StaffRoles.DOCTOR,
+        role: 'Doctor',
         department: '',
-        phone: ''
+        phone: '',
+        gender: 'Male',
+        assigned_doctor_id: '',
       });
       setErrors({});
       onClose();
@@ -54,127 +55,140 @@ export const AddStaffForm = ({ onAddStaff, isOpen, onClose }) => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
-    
-    // Clear error when user starts typing
-    if (errors[name]) {
-      setErrors(prev => ({ ...prev, [name]: '' }));
-    }
+    if (errors[name]) setErrors(prev => ({ ...prev, [name]: '' }));
   };
 
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <div className="bg-white rounded-xl shadow-2xl w-full max-w-md max-h-[90vh] overflow-y-auto">
-        <div className="flex items-center justify-between p-6 border-b border-gray-200">
-          <div className="flex items-center gap-3">
-            <div className="p-2 bg-blue-100 rounded-lg">
-              <UserPlus className="w-5 h-5 text-blue-600" />
+    <div className="modal-overlay">
+      <div className="modal-box">
+        <div className="modal-header">
+          <div className="modal-header-left">
+            <div className="modal-icon-box">
+              <UserPlus className="modal-icon" />
             </div>
-            <h2 className="text-xl font-semibold text-gray-800">Add Staff Member</h2>
+            <h2 className="modal-title">Add Staff Member</h2>
           </div>
-          <button
-            onClick={onClose}
-            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-          >
-            <X className="w-5 h-5 text-gray-500" />
+          <button onClick={onClose} className="modal-close-btn">
+            <X className="close-icon" />
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-6 space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Full Name *
-            </label>
+        <form onSubmit={handleSubmit} className="modal-form">
+          <div className="form-group">
+            <label className="form-label">Full Name *</label>
             <input
               type="text"
               name="name"
               value={formData.name}
               onChange={handleChange}
-              className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors ${
-                errors.name ? 'border-red-500' : 'border-gray-300'
-              }`}
+              className={`form-input ${errors.name ? 'input-error' : ''}`}
               placeholder="Enter full name"
             />
-            {errors.name && <p className="mt-1 text-sm text-red-600">{errors.name}</p>}
+            {errors.name && <p className="form-error">{errors.name}</p>}
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Email Address *
-            </label>
+          <div className="form-group">
+            <label className="form-label">Email Address *</label>
             <input
               type="email"
               name="email"
               value={formData.email}
               onChange={handleChange}
-              className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors ${
-                errors.email ? 'border-red-500' : 'border-gray-300'
-              }`}
+              className={`form-input ${errors.email ? 'input-error' : ''}`}
               placeholder="Enter email address"
             />
-            {errors.email && <p className="mt-1 text-sm text-red-600">{errors.email}</p>}
+            {errors.email && <p className="form-error">{errors.email}</p>}
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Role *
-            </label>
+          <div className="form-group">
+            <label className="form-label">Role *</label>
             <select
               name="role"
               value={formData.role}
               onChange={handleChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
+              className="form-input"
             >
-              <option value={StaffRoles.DOCTOR}>Doctor</option>
-              <option value={StaffRoles.NURSE}>Nurse</option>
+              <option value="Doctor">Doctor</option>
+              <option value="Nurse">Nurse</option>
             </select>
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Department *
-            </label>
-            <input
-              type="text"
+          <div className="form-group">
+            <label className="form-label">Gender *</label>
+            <select
+              name="gender"
+              value={formData.gender}
+              onChange={handleChange}
+              className="form-input"
+            >
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+
+          {/* Assigned Doctor (Only for Nurse) */}
+          {formData.role === 'Nurse' && (
+            <div className="form-group">
+              <label className="form-label">Assign to Doctor *</label>
+              <select
+                name="assigned_doctor_id"
+                value={formData.assigned_doctor_id}
+                onChange={handleChange}
+                className={`form-input ${errors.assigned_doctor_id ? 'input-error' : ''}`}
+              >
+                <option value="">Select Doctor</option>
+                {doctors.map(doc => (
+                  <option key={doc.id} value={doc.id}>
+                    {doc.name}
+                  </option>
+                ))}
+              </select>
+              {errors.assigned_doctor_id && (
+                <p className="form-error">{errors.assigned_doctor_id}</p>
+              )}
+            </div>
+          )}
+
+          {/* Department */}
+          <div className="form-group">
+            <label className="form-label">Department *</label>
+            <select
               name="department"
               value={formData.department}
               onChange={handleChange}
-              className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors ${
-                errors.department ? 'border-red-500' : 'border-gray-300'
-              }`}
-              placeholder="e.g., Cardiology, Emergency, ICU"
-            />
-            {errors.department && <p className="mt-1 text-sm text-red-600">{errors.department}</p>}
+              className={`form-input ${errors.department ? 'input-error' : ''}`}
+            >
+              <option value="">Select Department</option>
+              {(formData.role === "Doctor" ? doctorDepartments : nurseDepartments).map((dept) => (
+                <option key={dept} value={dept}>{dept}</option>
+              ))}
+            </select>
+            {errors.department && <p className="form-error">{errors.department}</p>}
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Phone Number
-            </label>
+          {/* Phone */}
+          <div className="form-group">
+            <label className="form-label">Phone Number</label>
             <input
               type="tel"
               name="phone"
               value={formData.phone}
               onChange={handleChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
+              className="form-input"
               placeholder="Enter phone number"
             />
           </div>
 
-          <div className="flex gap-3 pt-4">
-            <button
-              type="button"
-              onClick={onClose}
-              className="flex-1 px-4 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
-            >
+          {/* Buttons */}
+          <div className="form-actions">
+            <button type="button" onClick={onClose} className="cancel-btn">
               Cancel
             </button>
-            <button
-              type="submit"
-              className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center gap-2"
-            >
-              <Plus className="w-4 h-4" />
+            <button type="submit" className="submit-btn">
+              <Plus className="submit-icon" />
               Add Staff
             </button>
           </div>

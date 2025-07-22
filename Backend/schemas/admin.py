@@ -6,7 +6,7 @@ class AdminBase(BaseModel):
     admin_name: str
     hospital_id: int
     email: EmailStr
-    password: str
+    # password: str
 
 
 class AdminCreate(AdminBase):

@@ -145,7 +145,7 @@ class Admin(Base):
     __tablename__ = "admin"
 
     admin_id = Column(Integer, primary_key=True, index=True)
-    password=Column(String, nullable=False)
+    # password = Column(String, nullable=True)
     admin_name = Column(String, nullable=False)
     hospital_id = Column(Integer, ForeignKey(
         "hospital.hospital_id"), nullable=False)
@@ -163,7 +163,7 @@ class Doctor(Base):
     gender = Column(Enum(Gender), nullable=False)
     department = Column(Enum(DoctorDepartment), nullable=False)
     email = Column(String, unique=True, nullable=False)
-    password = Column(String, nullable=False)
+    # password = Column(String, nullable=True)
     phone = Column(String, nullable=False)
     hospital_id = Column(Integer, ForeignKey(
         "hospital.hospital_id"), nullable=False)
@@ -184,9 +184,12 @@ class Nurse(Base):
     gender = Column(Enum(Gender), nullable=False)
     department = Column(Enum(NurseDepartment), nullable=False)
     email = Column(String, unique=True, nullable=False)
-    password = Column(String, nullable=False)
+    # password = Column(String, nullable=True)
+    hospital_id = Column(Integer, ForeignKey(
+        "hospital.hospital_id"), nullable=False)
     phone = Column(String, nullable=True)
-    assigned_doctor_id = Column(Integer, ForeignKey("doctors.id"))
+    assigned_doctor_id = Column(
+        Integer, ForeignKey("doctors.id"), nullable=True)
     created_at = Column(DateTime, nullable=False, default=func.now())
     updated_at = Column(DateTime, nullable=False,
                         default=func.now(), onupdate=func.now())

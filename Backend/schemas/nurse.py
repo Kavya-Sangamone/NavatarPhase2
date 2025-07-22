@@ -13,8 +13,8 @@ class NurseBase(BaseModel):
 
 
 class NurseCreate(NurseBase):
-    assigned_doctor_id: int
-    password: str
+    assigned_doctor_id: Optional[int] = None
+    # password: str
 
 
 class NurseUpdate(BaseModel):
@@ -22,14 +22,14 @@ class NurseUpdate(BaseModel):
     gender: Optional[Gender]
     department: Optional[NurseDepartment]
     email: Optional[EmailStr]
-    password: Optional[str] = None
+    # password: Optional[str] = None
     phone: Optional[str] = Field(None, min_length=10, max_length=15)
     assigned_doctor_id: Optional[int]
 
 
 class NurseOut(NurseBase):
     id: int
-    assigned_doctor_id: int
+    assigned_doctor_id: Optional[int] = None
     created_at: datetime
     updated_at: datetime
 
