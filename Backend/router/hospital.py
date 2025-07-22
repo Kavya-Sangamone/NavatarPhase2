@@ -38,6 +38,15 @@ def delete_hospital(hospital_id: int, db: Session = Depends(get_db)):
     return hospital_crud.delete_hospital(hospital_id, db)
 
 
+#7/21/2025
+@router.get("/{hospital_id}", response_model=hospital_schema.HospitalOut)
+def get_hospital_by_id(hospital_id: int, db: Session = Depends(get_db)):
+    hospital = hospital_crud.get_hospital_by_id( hospital_id,db)
+    if not hospital:
+        raise HTTPException(status_code=404, detail="Hospital not found")
+    return hospital
+
+
 # @router.post("/create_with_admin")
 # def create_with_admin(data: HospitalWithAdmin, db: Session = Depends(get_db)):
 #     return hospital_crud.create_hospital_with_admin(db, data)

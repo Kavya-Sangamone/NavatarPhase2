@@ -5,6 +5,7 @@ import Activities from "./activity/Activity";
 import Navatar from "./navatar/Navatar";
 import Sidebar from "./Sidebar";
 import "./App.css";
+import HospitalView from "./hospital/HospitalView";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
           <Route path="/" element={<Activities />} />
           <Route path="/hospitals" element={<Hospital />} />
           <Route path="/navatars" element={<Navatar />} />
+           <Route path="/hospital/:id" element={<HospitalView />} />
         </Routes>
       </div>
     </div>

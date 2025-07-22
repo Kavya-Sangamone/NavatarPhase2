@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Search, RefreshCcw, MapPin, Calendar, Bot, Building2, Eye, Edit3, Trash2 } from 'lucide-react';
 import { deleteHospital } from '../apis/hospitalApi';
 import UpdateHospitalModal from './UpdateHospitalModal';
-import Modal from '../Modal';
+import Modal from '../Modal';     
+import { useNavigate } from 'react-router-dom';
 
 function HospitalManagement({ hospitals, fetchHospitals }) {
   const [searchTerm, setSearchTerm] = useState('');
@@ -17,6 +18,7 @@ function HospitalManagement({ hospitals, fetchHospitals }) {
     onConfirm: () => { },
     onCancel: null,
   });
+  const navigate = useNavigate();
 
   const formatDate = (dateStr) => {
     const date = new Date(dateStr);
@@ -65,12 +67,18 @@ function HospitalManagement({ hospitals, fetchHospitals }) {
     setSearchTerm("");
     await fetchHospitals();
     setIsRefreshing(false);
+  };  
+
+  const handleClickHospital = (hospitalId) => {
+    navigate(`/hospital/${hospitalId}`);
   };
 
 
   const filteredHospitals = hospitals.filter(hospital =>
     hospital.hospital_name?.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  
 
   return (
     <div className="management-container">
@@ -120,7 +128,9 @@ function HospitalManagement({ hospitals, fetchHospitals }) {
                 <td><Bot className="inline-icon purple" /><span>{hospital.totalNavatars} </span></td>
                 <td>
                   <div className="action-buttons">
-                    <button title="View Details"><Eye /></button>
+                    <button onClick={()=>navigate(`/hospital/${hospital.hospital_id}`)}
+              className="text-blue-500 hover:text-blue-700"
+              title="View Details"><Eye /></button>
                     <button onClick={() => handleEditHospital(hospital)} title="Edit"><Edit3 /></button>
                     <button onClick={() => handleDeleteHospital(hospital.hospital_id)} title="Delete"><Trash2 /></button>
                   </div>

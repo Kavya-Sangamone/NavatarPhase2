@@ -23,3 +23,8 @@ export const searchHospitals = (searchQuery) => {
     params: { search_query: searchQuery },
   });
 };
+
+export const getHospitalById = async (id) => {
+  const res = await axios.get(`${BASE_URL}/${id}`);
+  return res.data;
+};
