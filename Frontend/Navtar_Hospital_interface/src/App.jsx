@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Plus, Building2 } from "lucide-react";
+import { Plus, Building2} from "lucide-react";
 import { AddStaffForm } from "./components/AddStaffForm";
 import { StaffList } from "./components/StaffList";
 import { EditStaffModal } from "./components/EditStaffModal";
@@ -12,6 +12,9 @@ import { updateDoctor } from "./apis/doctorApis";
 import { updateNurse } from "./apis/nurseApis";
 import { deleteDoctor } from "./apis/doctorApis";
 import { deleteNurse } from "./apis/nurseApis";
+import Sidebar from "./components/Sidebar";
+
+
 import "./App.css";
 
 // dummy admin
@@ -170,28 +173,33 @@ function App() {
 
 
   return (
-    <div className="app-container">
+  <div className="flex min-h-screen">
+    {/* Sidebar on the left */}
+    <Sidebar />
+
+    {/* Main content on the right */}
+    <div className="flex-1 flex flex-col">
       {/* Header */}
-      <header className="header">
-        <div className="header-content">
-          <div className="header-left">
-            <div className="logo-container">
-              <Building2 className="logo-icon" />
-            </div>
-            <div className="header-text">
-              <h1 className="header-title">Hospital Staff Management</h1>
-              <p className="header-subtitle">Manage doctors and nurses</p>
-            </div>
+      <header className="header bg-white shadow px-6 py-4 flex justify-between items-center">
+        <div className="flex items-center gap-4">
+          <Building2 className="text-blue-800 w-6 h-6" />
+          <div>
+            <h1 className="text-xl font-bold text-blue-900">Hospital Staff Management</h1>
+            <p className="text-sm text-gray-600">Manage doctors and nurses</p>
           </div>
-          <button onClick={() => setIsAddFormOpen(true)} className="add-button">
-            <Plus className="add-icon" />
-            Add Staff
-          </button>
         </div>
+
+        <button
+          onClick={() => setIsAddFormOpen(true)}
+          className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
+        >
+          <Plus className="w-5 h-5" />
+          Add Staff
+        </button>
       </header>
 
       {/* Main Content */}
-      <main className="main-content">
+      <main className="p-6">
         <StaffList
           staff={staff}
           navatars={navatars}
@@ -199,23 +207,25 @@ function App() {
           onEdit={setEditingStaff}
         />
       </main>
-
-      {/* Modals */}
-      <AddStaffForm
-        isOpen={isAddFormOpen}
-        onClose={() => setIsAddFormOpen(false)}
-        onAddStaff={handleAddStaff}
-        doctors={doctors}
-      />
-
-      <EditStaffModal
-        staff={editingStaff}
-        onSave={handleEditStaff}
-        onClose={() => setEditingStaff(null)}
-        doctors={doctors}
-      />
     </div>
-  );
+
+    {/* Modals */}
+    <AddStaffForm
+      isOpen={isAddFormOpen}
+      onClose={() => setIsAddFormOpen(false)}
+      onAddStaff={handleAddStaff}
+      doctors={doctors}
+    />
+
+    <EditStaffModal
+      staff={editingStaff}
+      onSave={handleEditStaff}
+      onClose={() => setEditingStaff(null)}
+      doctors={doctors}
+    />
+  </div>
+);
+
 }
 
 export default App;
