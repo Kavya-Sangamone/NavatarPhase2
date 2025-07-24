@@ -1,6 +1,7 @@
 import axios from "./axiosInstance";
 
-const BASE_URL = "/superadmin/navatars";
+//const BASE_URL = "http://127.0.0.1:8000/superadmin/navatars";
+const BASE_URL = "/superadmin/navatars"
 
 // Fetch all navatars
 export const fetchNavatars = () => {

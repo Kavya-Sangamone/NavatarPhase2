@@ -6,10 +6,14 @@ import Navatar from "./navatar/Navatar";
 import Sidebar from "./Sidebar";
 import "./App.css";
 import HospitalView from "./hospital/HospitalView";
+import './index.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
+
 
 function App() {
   return (
     <div className="App">
+      
       <Sidebar />
       <div className="pages">
         <Routes>
