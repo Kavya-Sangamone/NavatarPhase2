@@ -13,6 +13,11 @@ def create_doctor(hospital_id: int, doctor: DoctorCreate, db: Session = Depends(
     return doctor_crud.create_doctor(db, hospital_id, doctor)
 
 
+@router.get("/doctors/by-email/{email}", response_model=DoctorOut)
+def get_doctor_by_email(email: str, db: Session = Depends(get_db)):
+    return doctor_crud.get_doctor_by_email(db, email)
+
+
 @router.get("/{hospital_id}/doctors", response_model=List[DoctorOut])
 def list_doctors(hospital_id: int, db: Session = Depends(get_db)):
     return doctor_crud.list_doctors_by_hospital(db, hospital_id)

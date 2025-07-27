@@ -13,6 +13,11 @@ def create(booking: booking_schema.BookingCreate, db: Session = Depends(get_db))
     return booking_crud.create_booking(db, booking)
 
 
+@router.get("/hospital/{hospital_id}", response_model=List[booking_schema.BookingOut])
+def read_by_hospital(hospital_id: int, db: Session = Depends(get_db)):
+    return booking_crud.get_bookings_by_hospital(db, hospital_id)
+
+
 @router.get("/{booking_id}", response_model=booking_schema.BookingOut)
 def read(booking_id: int, db: Session = Depends(get_db)):
     return booking_crud.get_booking(db, booking_id)
