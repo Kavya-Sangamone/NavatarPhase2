@@ -29,6 +29,7 @@ class NurseUpdate(BaseModel):
 
 class NurseOut(NurseBase):
     id: int
+    hospital_id: int
     assigned_doctor_id: Optional[int] = None
     created_at: datetime
     updated_at: datetime

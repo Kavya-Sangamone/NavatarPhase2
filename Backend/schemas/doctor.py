@@ -29,6 +29,7 @@ class DoctorUpdate(BaseModel):
 
 class DoctorOut(DoctorBase):
     id: int
+    hospital_id: int
     created_at: datetime
     updated_at: datetime
 
