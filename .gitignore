@@ -1,1 +1,4 @@
 *.db
+Backend/.env
+.env
+.env*
