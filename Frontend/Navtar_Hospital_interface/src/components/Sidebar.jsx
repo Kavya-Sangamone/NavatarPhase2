@@ -1,5 +1,6 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
+import { googleLogout } from "@react-oauth/google";
 import {
   Stethoscope,
   Syringe,
@@ -8,6 +9,11 @@ import {
   Building2,
 } from "lucide-react";
 
+const handleLogout = () => {
+    googleLogout(); // Clear Google token
+    localStorage.removeItem("admin"); // Optional: Clear stored admin
+    window.location.href = "/"; // Redirect to login or landing
+  };
 const Sidebar = () => {
   return (
     <div className="w-64 bg-[#e3f2fd] min-h-screen shadow-md">
@@ -78,6 +84,12 @@ const Sidebar = () => {
           Navtar Management
         </NavLink>
       </nav>
+       <button
+        onClick={handleLogout}
+        className="mt-6 bg-red-600 hover:bg-red-700 transition px-4 py-2 rounded text-white text-sm"
+      >
+        Sign Out
+      </button>
     </div>
   );
 };
