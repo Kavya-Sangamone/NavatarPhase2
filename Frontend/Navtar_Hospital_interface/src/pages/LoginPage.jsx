@@ -2,8 +2,11 @@ import React from "react";
 import { useGoogleLogin } from "@react-oauth/google";
 import { useNavigate } from "react-router-dom";
 
+
 function LoginPage({ onLogin }) {
   const navigate = useNavigate();  // ✅ Move it here
+  const baseURL = "https://navatar-ashen.vercel.app";
+  // const baseURL= "http://127.0.0.1:8000";
 
   const login = useGoogleLogin({
     flow: "implicit",
@@ -11,7 +14,7 @@ function LoginPage({ onLogin }) {
       console.log("Login Successful");
 
       try {
-        const res = await fetch("http://localhost:8000/auth/verify-token", {
+        const res = await fetch(`${baseURL}/auth/verify-token`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
