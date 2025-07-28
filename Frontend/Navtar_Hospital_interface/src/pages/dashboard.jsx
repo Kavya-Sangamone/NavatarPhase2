@@ -1,19 +1,27 @@
 import React, { useState, useEffect } from "react";
 import { Plus, Building2 } from "lucide-react";
+import Sidebar from "../components/Sidebar";
 import { AddStaffForm } from "../components/AddStaffForm";
 import { StaffList } from "../components/StaffList";
 import { EditStaffModal } from "../components/EditStaffModal";
-import { listDoctors } from "../apis/doctorApis";
+
+import {
+  listDoctors,
+  createDoctor,
+  updateDoctor,
+  deleteDoctor,
+} from "../apis/doctorApis";
+
+import {
+  getNursesByHospital,
+  createNurse,
+  updateNurse,
+  deleteNurse,
+} from "../apis/nurseApis";
+
 import { getNavatarsByHospital } from "../apis/navatarApis";
-import { getNursesByHospital } from "../apis/nurseApis";
-import { createDoctor } from "../apis/doctorApis";
-import { createNurse } from "../apis/nurseApis";
-import { updateDoctor } from "../apis/doctorApis";
-import { updateNurse } from "../apis/nurseApis";
-import { deleteDoctor } from "../apis/doctorApis";
-import { deleteNurse } from "../apis/nurseApis";
-import Sidebar from "../components/Sidebar";
 import "../index.css";
+
 function Dashboard({ admin }) {
   const [staff, setStaff] = useState([]);
   const [isAddFormOpen, setIsAddFormOpen] = useState(false);
@@ -85,8 +93,8 @@ function Dashboard({ admin }) {
       console.error("Failed to add staff:", error);
       alert(
         error.response?.data?.detail ||
-          error.message ||
-          "Failed to add staff. Please try again."
+        error.message ||
+        "Failed to add staff. Please try again."
       );
     }
   };
@@ -112,8 +120,8 @@ function Dashboard({ admin }) {
       console.error("Failed to update staff:", error);
       alert(
         error.response?.data?.detail ||
-          error.message ||
-          "Failed to update staff. Please try again."
+        error.message ||
+        "Failed to update staff. Please try again."
       );
     }
   };

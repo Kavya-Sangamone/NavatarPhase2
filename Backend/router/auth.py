@@ -1,7 +1,6 @@
-# auth.py
 from fastapi import APIRouter, Request, HTTPException, Depends
 from sqlalchemy.orm import Session
-import requests as ext_requests  # renamed to avoid collision
+import requests as ext_requests
 from database import get_db
 from models import Admin
 
