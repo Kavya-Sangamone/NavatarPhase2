@@ -247,7 +247,9 @@ import React from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import LoginPage from "./pages/LoginPage";
 import Dashboard from "./pages/dashboard";
-
+import DoctorManagement from "./pages/DoctorManagement";
+import NurseManagement from "./pages/NurseManagement";
+import NavatarManagement from "./pages/NavatarManagement";
 function App() {
   const storedAdmin = localStorage.getItem("admin");
   const [admin, setAdmin] = React.useState(() => (storedAdmin ? JSON.parse(storedAdmin) : null));
@@ -269,6 +271,18 @@ function App() {
           path="/dashboard"
           element={<Dashboard admin={admin} />}
         />
+        <Route
+          path="doctors"
+          element={<DoctorManagement to="/" replace />}
+          />
+          <Route
+          path="staff" 
+          element={<NurseManagement to="/" replace />}
+        />
+        <Route
+          path="navtar"
+          element={<NavatarManagement to="/" replace />}
+          />
       </Routes>
     </Router>
   );

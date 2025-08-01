@@ -128,7 +128,7 @@ class Navatar(Base):
     __tablename__ = "navatar"
 
     navatar_id = Column(Integer, primary_key=True, index=True)
-    navatar_name = Column(String, nullable=False)
+    navatar_name = Column(String, unllable=False)
     location = Column(String, nullable=True)
     hospital_id = Column(Integer, ForeignKey(
         "hospital.hospital_id"), nullable=True)

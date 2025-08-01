@@ -6,7 +6,7 @@ class AdminBase(BaseModel):
     admin_name: str
     hospital_id: int
     email: EmailStr
-    # password: str
+    
 
 
 class AdminCreate(AdminBase):
@@ -17,7 +17,6 @@ class AdminUpdate(BaseModel):
     username: Optional[str] = None
     email: Optional[EmailStr] = None
     is_active: Optional[bool] = None
-    password: Optional[str] = None
     pass
 
 

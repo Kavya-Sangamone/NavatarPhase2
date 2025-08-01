@@ -47,7 +47,7 @@ function HospitalView() {
                 e.preventDefault();
                 const newAdmin = {
                   admin_name: e.target.name.value,
-                  email: e.target.email.value,
+                   email: e.target.email.value,
                   hospital_id: hospital.hospital_id
                 };
                 try {
@@ -56,7 +56,9 @@ function HospitalView() {
                   alert("Admin created!");
                   setShowAdminForm(false);
                 } catch (err) {
-                  alert("Failed to create admin");
+                  console.error("❌ Axios 422 Error Response from Backend:", err.response?.data);
+
+                  alert("Failed to create admin: " + JSON.stringify(err.response?.data?.detail || err.message));
                   console.error(err);
                 }
               }}

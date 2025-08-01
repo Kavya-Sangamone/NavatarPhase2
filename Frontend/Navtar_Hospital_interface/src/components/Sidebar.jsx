@@ -1,6 +1,8 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 import { googleLogout } from "@react-oauth/google";
+import { getHospitalById } from "../apis/hospitalApi"; // adjust path if needed
+import { useState, useEffect } from "react";
 import {
   Stethoscope,
   Syringe,
@@ -9,12 +11,36 @@ import {
   Building2,
 } from "lucide-react";
 
+const storedAdmin = localStorage.getItem("admin");
+const admin = storedAdmin ? JSON.parse(storedAdmin) : null;
+
+console.log("Admin Data:", admin);
 const handleLogout = () => {
     googleLogout(); // Clear Google token
     localStorage.removeItem("admin"); // Optional: Clear stored admin
     window.location.href = "/"; // Redirect to login or landing
   };
 const Sidebar = () => {
+  const [hospitalName, setHospitalName] = useState("");
+   useEffect(() => {
+  if (admin?.hospital_id) {
+    getHospitalById(admin.hospital_id)
+      .then((res) => {
+      
+        const name = res?.hospital_name;
+        if (name) {
+          setHospitalName(name);
+        } else {
+          console.warn("Hospital name not found in response");
+        }
+      })
+      .catch((err) => {
+        console.error("Error fetching hospital name", err);
+      });
+  }
+}, [admin?.hospital_id]);
+
+
   return (
     <div className="w-64 bg-[#e3f2fd] min-h-screen shadow-md">
       {/* Top Section */}
@@ -84,10 +110,19 @@ const Sidebar = () => {
           Navtar Management
         </NavLink>
       </nav>
+        {admin && (
+        <div className="p-4 text-sm text-[#0d47a1] border-t border-[#bbdefb]">
+          <p><strong>Email:</strong> {admin.email}</p>
+          <p><strong>Hospital ID:</strong> {admin.hospital_id}</p>
+          <p><strong>Hospital Name:</strong>{hospitalName}</p>
+        </div>
+      )}
+      
        <button
         onClick={handleLogout}
         className="mt-6 bg-red-600 hover:bg-red-700 transition px-4 py-2 rounded text-white text-sm"
       >
+          
         Sign Out
       </button>
     </div>
