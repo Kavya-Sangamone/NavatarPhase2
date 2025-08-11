@@ -32,7 +32,7 @@ function HospitalManagement({ hospitals, fetchHospitals }) {
   const handleDeleteHospital = (id) => {
     setModalConfig({
       title: "Confirm Deletion",
-      message: "Are you sure you want to delete this Navatar?",
+      message: "Are you sure you want to delete this Hospital?",
       onConfirm: async () => {
         setIsLoading(true);
         try {

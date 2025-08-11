@@ -12,11 +12,11 @@ export const createHospital = (data) => {
 };
 
 export const updateHospital = (id, data) => {
-  return axios.put(`${BASE_URL}/${id}`, data);
+  return axios.put(`${BASE_URL}${id}`, data);
 };
 
 export const deleteHospital = (id) => {
-  return axios.delete(`${BASE_URL}/${id}`);
+  return axios.delete(`${BASE_URL}${id}`);
 };
 
 export const searchHospitals = (searchQuery) => {

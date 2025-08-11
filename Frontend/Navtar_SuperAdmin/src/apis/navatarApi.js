@@ -28,6 +28,7 @@ export const getNavatarById = (id) => {
   return axios.get(`${BASE_URL}${id}`);
 };
 
+
 // Search navatars by optional hospital_id or search_query
 export const searchNavatars = (hospitalId, searchQuery) => {
   return axios.get(`${BASE_URL}/search`, {
@@ -39,6 +40,10 @@ export const searchNavatars = (hospitalId, searchQuery) => {
 };
 
 // Get navatars by hospital
-export const getNavatarsByHospital = (hospitalId) => {
+export const get_navatars_by_hospital = (hospitalId) => {
   return axios.get(`${BASE_URL}${hospitalId}/navatars`);
 };
+
+export const deleteNavatarById = (id) => {
+  return axios.delete(`${BASE_URL}${id}`);
+}

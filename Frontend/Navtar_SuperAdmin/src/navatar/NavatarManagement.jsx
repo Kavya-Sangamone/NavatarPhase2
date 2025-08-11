@@ -147,9 +147,9 @@ function NavatarManagement({ navatars, fetchNavatars }) {
                 </td>
                 <td>
                   <div className="action-buttons">
-                    <button title="View Details"><Eye /></button>
+                    
                     <button onClick={() => handleEditNavatar(navatar)} title="Edit"><Edit3 /></button>
-                    <button onClick={() => handleDeleteNavatar(navatar.navatar_id)} title="Delete"><Trash2 /></button>
+                   
                   </div>
                 </td>
               </tr>

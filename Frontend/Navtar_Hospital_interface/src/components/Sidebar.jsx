@@ -86,17 +86,7 @@ const Sidebar = () => {
           Nurse Management
         </NavLink>
 
-        <NavLink
-          to="/bookings"
-          className={({ isActive }) =>
-            `flex items-center gap-3 px-4 py-2 rounded-lg transition ${
-              isActive ? "bg-[#1976d2] text-white" : "hover:bg-[#bbdefb]"
-            }`
-          }
-        >
-          <CalendarDays className="w-5 h-5" />
-          Booking Management
-        </NavLink>
+      
 
         <NavLink
           to="/navtar"
@@ -106,6 +96,7 @@ const Sidebar = () => {
             }`
           }
         >
+        
           <Building2 className="w-5 h-5" />
           Navtar Management
         </NavLink>

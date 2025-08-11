@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { Building2, Shield, Activity, Bot, Menu, X } from 'lucide-react';
+import './Sidebar.css'; // Assuming you have a CSS file for styling
 
 const Sidebar = () => {
     const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -38,12 +39,7 @@ const Sidebar = () => {
                         <span>Navatars</span>
                     </div>
                 </NavLink>
-                <NavLink to="/security" style={linkStyle}>
-                    <div className="nav-item">
-                        <Shield />
-                        <span>Security</span>
-                    </div>
-                </NavLink>
+               
 
             </nav>
 

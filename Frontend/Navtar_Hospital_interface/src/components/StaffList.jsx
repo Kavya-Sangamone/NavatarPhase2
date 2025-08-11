@@ -156,71 +156,7 @@ export const StaffList = ({ staff, navatars, onDelete, onEdit }) => {
             )
           }
         </div>
-        <div className="navatar-section">
-          {/* Navatar Filters */}
-          <div className="filters-card">
-            <div className="filters-container">
-              <div className="search-input-wrapper">
-                <Search className="search-icon" />
-                <input
-                  type="text"
-                  placeholder="Search Navatars by name..."
-                  value={navatarFilters.searchTerm}
-                  onChange={(e) =>
-                    setNavatarFilters((prev) => ({
-                      ...prev,
-                      searchTerm: e.target.value
-                    }))
-                  }
-                  className="search-input"
-                />
-              </div>
-
-              <div className="role-select-wrapper">
-                <Filter className="filter-icon" />
-                <select
-                  value={navatarFilters.status}
-                  onChange={(e) =>
-                    setNavatarFilters((prev) => ({
-                      ...prev,
-                      status: e.target.value
-                    }))
-                  }
-                  className="role-select"
-                >
-                  <option value="all">All Status</option>
-                  <option value="Available">Available</option>
-                  <option value="Booked">Booked</option>
-                  <option value="InSession">InSession</option>
-                  <option value="Offline">Offline</option>
-                </select>
-              </div>
-            </div>
-          </div>
-          {/* Navatar Grid */}
-          {filteredNavatars.length === 0 ? (
-            <div className="no-results">
-              <Bot className="no-results-icon" />
-              <h3 className="no-results-title">No Navatars found</h3>
-              <p className="no-results-subtext">
-                {navatarFilters.searchTerm || navatarFilters.status !== 'all'
-                  ? 'Try adjusting your search or status filter'
-                  : 'Add your first Navatar to get started'}
-              </p>
-            </div>
-          ) : (
-            <div className="navatar-grid">
-              {filteredNavatars.map((nav) => (
-                <StaffCard
-                  key={`Navatar-${nav.id}`}
-                  staff={{ ...nav, role: 'Navatar' }}
-                  onDelete={onDelete}
-                  onEdit={onEdit}
-                />
-              ))}
-            </div>
-          )}
-        </div>
+      
       </div >
     </div >
   );
